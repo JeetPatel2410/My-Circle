@@ -1,0 +1,55 @@
+
+
+{{#each userInfo}}
+<div class="col-sm-6 col-lg-4">
+    <div class="card card-sm">
+        {{!-- {{log _id}} --}}
+
+        {{!-- <div class="card-body">
+            <div class="d-flex align-items-center">
+                <span class="avatar me-3 rounded" style="background-image: url({{image}})"></span>
+                <div>
+                    <div>{{firstname}} {{lastname}}</div>
+                </div>
+                {{!-- {{{isMatch ../logInUser._id data._id}}} --}}
+                {{!-- <div class="dropdown-menu">
+                    <div class="dropdown-menu-columns">
+                        <div class="dropdown-menu-column ">
+                            <a class="dropdown-item" href="javascript:void(0)" data-postid={{_id}} id="edit-btn">
+                                Edit Post
+                            </a>
+                            <a class="dropdown-item" href="javascript:void(0)" data-postid={{_id}} id="archive-btn">
+                                Archive
+                            </a>
+                        </div>
+                    </div>
+                </div> --}}
+
+
+
+                {{!--
+            </div>
+        </div> --}}
+        {{!-- <a href="#" class="d-block"><img src="{{image}}" class="card-img-top"
+                style="height: 424px;width:500px"></a>
+        <h3 class="card-title" style="margin-left: 16px;margin-top:14px">ToatalPost : {{ToatalPost}}</h3>
+        <p class="card-text" style="margin-left: 16px; margin-top:3px">Saved Post : {{savedPost}}</p> --}}
+        <div class="row row-cards">
+            <div class="card">
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <span class="avatar avatar-xl rounded" style="background-image: url({{image}})"></span>
+                    </div>
+                    <div class="card-title mb-1">ToatalPost : {{ToatalPost}}</div>
+                    <div class="text-muted">Saved Post : {{savedPost}}</div><br>
+                    <div class="card-title mb-1">{{formatdate createdOn}}</div>
+                </div>
+                <a class="card-btn">{{firstname}} {{lastname}}</a>
+            </div>
+        </div>
+    </div><br>
+</div>
+
+{{/each}}
+
+<script src="javascripts/pagewise/timeline.js"></script>

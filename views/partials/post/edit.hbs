@@ -1,0 +1,63 @@
+<div class="modal modal-blur fade" id="edit-post" tabindex="-1" role="dialog" aria-hidden="true">
+    <form enctype="multipart/form-data" id="post-edit-form">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" >Edit Post</h5>
+                    <button type="button" class="editbtn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row align-items-center">
+                         <div class="col-auto">
+                            <div class="col-auto"><img id="post-image" src="" style="height: 200px;width: 200px;" />
+                        </div>
+                            {{!-- <span class="avatar avatar-xl"
+                                style="background-image: url(./uploads/{{imageId}})">
+                                </span> --}}
+                        </div>
+                        <div class="col-auto"><input id="fileupload" type="file" name="editavatar"><br><br>
+                        </div>
+                    </div><br>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">Title</label>
+                                <input type="text" class="form-control" name="title" id="titlefield" >
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <input type="text" class="form-control" name="description" id="description">
+                    </div>
+                    <input type="hidden" id="hiddenval" name="hiddenval" value="{{_id}}">
+
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
+                        Cancel
+                    </a>
+                    <button type="submit" class="editbutton btn btn-dark">Edit</button>
+                    {{!-- <a href="#" class="btn btn-primary ms-auto" data-bs-dismiss="modal">
+                        <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
+                            stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M12 5l0 14" />
+                            <path d="M5 12l14 0" />
+                        </svg>
+                        Create new Post
+                    </a> --}}
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script src="javascripts/pagewise/post.js"></script>

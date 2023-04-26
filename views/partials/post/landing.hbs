@@ -1,0 +1,62 @@
+{{!-- <div class="card" style="width: 18rem;">
+  <img class="card-img-top" src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
+    alt="Card image cap">
+  <div class="card-body">
+    <h5 class="card-title">{{this.title}}</h5>
+    <p class="card-text">{{this.description}}</p>
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+  </div>
+</div><br>
+--}}
+{{#each landingData}}
+{{log this}}
+<div class="col-sm-6 col-lg-4">
+  <div class="card card-sm">
+    {{log _id}}
+
+    <div class="card-body">
+      <div class="d-flex align-items-center">
+        <span class="avatar me-3 rounded" style="background-image: url({{data.image}})"></span>
+        <div>
+          <div>{{data.firstname}} {{data.lastname}}</div>
+        </div>
+        {{{isMatch ../logInUser._id data._id}}}
+        <div class="dropdown-menu">
+          <div class="dropdown-menu-columns">
+            <div class="dropdown-menu-column ">
+              <a class="dropdown-item" href="javascript:void(0)" data-postid={{_id}} id="edit-btn">
+                Edit Post
+              </a>
+              <a class="dropdown-item" href="javascript:void(0)" data-postid={{_id}} id="archive-btn">
+                Archive
+              </a>
+            </div>
+          </div>
+        </div>
+
+
+
+      </div>
+    </div>
+    <a href="#" class="d-block"><img src="../uploads/{{imageId}}" class="card-img-top"
+        style="height: 424px;width:500px"></a>
+    <h3 class="card-title" style="margin-left: 16px;margin-top:14px">{{title}}</h3>
+    <p class="card-text" style="margin-left: 16px; margin-top:3px">{{description}}</p>
+    <p style="margin-left: 17px;">{{formatdate createdOn}}</p>
+
+    <div class="d-flex justify-content-end">
+      <svg xmlns="http://www.w3.org/2000/svg" class="savebtn icon icon-tabler icon-tabler-bookmark " width="24"
+        height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+        stroke-linejoin="round" id="{{postBy}}" data-id="{{_id}}" style="margin-top: -74px;margin-right: 31px;">
+        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+        <path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2"></path>
+    </div>
+
+  </div><br>
+</div>
+
+{{!-- {{> post/edit}} --}}
+{{/each}}
+
+{{!-- <script src="javascripts/pagewise/timeline.js"></script> --}}
+{{!-- <script src="javascripts/pagewise/post.js"></script> --}}

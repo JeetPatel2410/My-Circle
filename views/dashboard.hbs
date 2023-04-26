@@ -1,0 +1,39 @@
+<div class="container-xl" id="posts">
+  <!-- Content here -->
+  {{!-- {{#each postData}}
+  --}}
+
+  {{> post/posts}}
+
+  <ul class="pagination" style="margin-left: -10px;">
+    {{#if pageArry}}
+    {{#each pageArry}}
+    <li class="page-item" id="pagination-list"><a class="page-link" href="/timeline?page={{this}}">{{this}}</a></li>
+    {{/each}}
+    {{else}}
+    {{#each pageArrys}}
+    {{!-- <li class="page-item" id="pagination-list"><a class="page-link"
+        href="/timeline/posts?page={{this}}">{{this}}</a></li> --}}
+    <li class="page-item" id="pagination-list">
+      <p style="width: 33px;" class="common-filter" data-id="{{this}}">{{this}}</p>
+    </li>
+    {{/each}}
+    {{/if}}
+
+  </ul>
+
+  {{#if landingData}}
+  {{> post/landing}}
+  {{/if}}
+
+  {{#if saveData}}
+  {{> post/saved}}
+  {{/if}}
+
+  {{#if userInfo}}
+  {{> user/users}}
+  {{/if}}
+  {{!-- {{/each}} --}}
+
+
+</div>
