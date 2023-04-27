@@ -56,7 +56,15 @@
 
     </div><br>
 </div>
+
 {{/if}}
 {{/each}}
+<ul class="pagination" style="margin-left: -10px;">
+  {{#each pageArrySave}}
+  <li class="page-item" id="pagination-list">
+    <p style="width: 33px;" class="save-post-page" data-id="{{this}}">{{this}}</p>
+  </li>
+  {{/each}}
+  </ul>
 
 <script src="javascripts/pagewise/timeline.js"></script>

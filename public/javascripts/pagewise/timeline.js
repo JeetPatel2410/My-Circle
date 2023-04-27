@@ -300,4 +300,19 @@ $(document).ready(function () {
             }
         })
     })
+
+    $(".save-post-page").unbind().click(function () {
+    //    console.log($(this).data("id"));
+       const page = $(this).data("id")
+        $.ajax({
+            url: `/post/save?page=${page}`,
+            type: 'post',
+            success: function (response) {
+                $('#posts').html(response)
+            },
+            error: function (err) {
+                alert(err.responseJSON.message)
+            }
+        })
+    })
 })

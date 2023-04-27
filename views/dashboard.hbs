@@ -26,9 +26,9 @@
   {{> post/landing}}
   {{/if}}
 
-  {{#if saveData}}
+  {{!-- {{#if saveData}}
   {{> post/saved}}
-  {{/if}}
+  {{/if}} --}}
 
   {{#if userInfo}}
   {{> user/users}}
@@ -38,6 +38,13 @@
   {{> user/report}}
   {{/if}}
   {{!-- {{/each}} --}}
+
+  {{#if saveData}}
+  {{> post/saved}}
+  
+  {{/if}}
+
+
 
 
 </div>

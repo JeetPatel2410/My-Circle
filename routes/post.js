@@ -129,9 +129,61 @@ router.put('/:id/:postId', upload.single('editavatar'), async function (req, res
 });
 
 // Saved Post
+// router.post('/save', async function (req, res, next) {
+//     try {
+//         const saveData = await savepost.aggregate([{
+//             $lookup: {
+//                 from: "posts",
+//                 let: { id: "$postId" },
+//                 pipeline: [{
+//                     $match: {
+//                         $expr: {
+//                             $eq: ["$_id", "$$id"]
+//                         }
+//                     }
+//                 }],
+//                 as: "dataa"
+//             }
+//         },
+//         {
+//             $unwind: "$dataa"
+//         },
+//         {
+//             $lookup: {
+//                 from: "users",
+//                 let: { id: "$postBy" },
+//                 pipeline: [{
+//                     $match: {
+//                         $expr: {
+//                             $eq: ["$_id", "$$id"]
+//                         }
+//                     }
+//                 }],
+//                 as: "postdetails"
+//             }
+//         }, {
+//             $unwind: "$postdetails"
+//         }])
+//         res.render('dashboard', { title: 'dashboard', saveData: saveData, layout: "blank", logInUser: req.user });
+//     } catch (error) {
+//         console.log(error);
+//     }
+// });
+
+// paggeination save post
 router.post('/save', async function (req, res, next) {
     try {
+
+        let limit = 2;
+        let page = req.query.page ? req.query.page : 1;
+        let skip = (limit * (page - 1));
+        // const id = new mongoose.Types.ObjectId(req.user._id);
+
         const saveData = await savepost.aggregate([{
+            $skip: skip
+        }, {
+            $limit: limit
+        }, {
             $lookup: {
                 from: "posts",
                 let: { id: "$postId" },
@@ -164,12 +216,55 @@ router.post('/save', async function (req, res, next) {
         }, {
             $unwind: "$postdetails"
         }])
-        res.render('dashboard', { title: 'dashboard', saveData: saveData, layout: "blank", logInUser: req.user });
+
+
+        const countSavePostData = await savepost.aggregate([{
+            $lookup: {
+                from: "posts",
+                let: { id: "$postId" },
+                pipeline: [{
+                    $match: {
+                        $expr: {
+                            $eq: ["$_id", "$$id"]
+                        }
+                    }
+                }],
+                as: "dataa"
+            }
+        },
+        {
+            $unwind: "$dataa"
+        },
+        {
+            $lookup: {
+                from: "users",
+                let: { id: "$postBy" },
+                pipeline: [{
+                    $match: {
+                        $expr: {
+                            $eq: ["$_id", "$$id"]
+                        }
+                    }
+                }],
+                as: "postdetails"
+            }
+        }, {
+            $unwind: "$postdetails"
+        }])
+
+
+        let totalPost = countSavePostData.length;
+        console.log(saveData);
+        let pageCount = Math.round(totalPost / limit);
+        let pageArrySave = [];
+        for (let i = 1; i <= pageCount; i++) {
+            pageArrySave.push(i);
+        }
+        res.render('dashboard', { title: 'dashboard', saveData: saveData, layout: "blank", logInUser: req.user, pageArrySave: pageArrySave });
     } catch (error) {
         console.log(error);
     }
 });
-
 
 
 module.exports = router;

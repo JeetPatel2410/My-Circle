@@ -132,7 +132,22 @@ router.get('/posts', async function (req, res, next) {
         $skip: skip
     }, {
         $limit: limit
-    }, {
+    },  {
+        $lookup: {
+            from: "postsavebies",
+            localField: "_id",
+            foreignField: "postId",
+            let: { savedby: id },
+            pipeline: [{
+                $match: {
+                    $expr: {
+                        $eq: ["$saveBy", "$$savedby"],
+                    }
+                }
+            }],
+            as: "savedatatatat"
+        }
+    },{
         $lookup: {
             from: "users",
             let: { id: "$postBy" },
@@ -160,7 +175,8 @@ router.get('/posts', async function (req, res, next) {
             "data.lastname": 1,
             "imageId": 1,
             "createdOn": 1,
-            "postBy": 1
+            "postBy": 1,
+            "savedatatatat": 1
         }
     }, {
         $sort: sortObj
