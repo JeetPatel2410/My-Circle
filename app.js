@@ -252,18 +252,18 @@ app.use(function (err, req, res, next) {
 // Cron 
 
 var job = new CronJob(
-  '*/60 */30 * * * *',
+  '*/60 */10 * * * *',
   async function () {
     // console.log(moment().subtract(5, 'minutes').toDate());
     const totalPost = await post.countDocuments({
       createdOn: {
-        $gte: moment().subtract(30, 'minutes').toDate(),
+        $gte: moment().subtract(10, 'minutes').toDate(),
         $lte: moment().toDate()
       }
     })
     const savedPost = await savePost.countDocuments({
       createdOn: {
-        $gte: moment().subtract(30, 'minutes').toDate(),
+        $gte: moment().subtract(10, 'minutes').toDate(),
         $lte: moment().toDate()
       }
     })

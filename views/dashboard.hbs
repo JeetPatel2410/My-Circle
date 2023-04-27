@@ -12,8 +12,6 @@
     {{/each}}
     {{else}}
     {{#each pageArrys}}
-    {{!-- <li class="page-item" id="pagination-list"><a class="page-link"
-        href="/timeline/posts?page={{this}}">{{this}}</a></li> --}}
     <li class="page-item" id="pagination-list">
       <p style="width: 33px;" class="common-filter" data-id="{{this}}">{{this}}</p>
     </li>
@@ -37,7 +35,6 @@
   {{#if reportData}}
   {{> user/report}}
   {{/if}}
-  {{!-- {{/each}} --}}
 
   {{#if saveData}}
   {{> post/saved}}
