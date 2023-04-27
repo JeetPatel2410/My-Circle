@@ -245,34 +245,35 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error'); 
+  res.render('error');
 });
 
 
 // Cron 
- 
+
 var job = new CronJob(
   '*/60 */30 * * * *',
-  async function () {  
+  async function () {
     // console.log(moment().subtract(5, 'minutes').toDate());
- const totalPost = await post.countDocuments({
-  createdOn:{
-    $gte: moment().subtract(30, 'minutes').toDate(),
-    $lte: moment().toDate()
-  }
- })
-  const savedPost = await savePost.countDocuments({
-    createdOn :{
-      $gte: moment().subtract(30, 'minutes').toDate(),
-      $lte: moment().toDate()
-    } 
-  })
-  // console.log(savedPost); 
-  const statisticsObj = {
-    totalpost: totalPost,
-    totalsavedpost: savedPost
-  }
-  await statistics.create(statisticsObj)
+    const totalPost = await post.countDocuments({
+      createdOn: {
+        $gte: moment().subtract(30, 'minutes').toDate(),
+        $lte: moment().toDate()
+      }
+    })
+    const savedPost = await savePost.countDocuments({
+      createdOn: {
+        $gte: moment().subtract(30, 'minutes').toDate(),
+        $lte: moment().toDate()
+      }
+    })
+
+    // console.log(savedPost); 
+    const statisticsObj = {
+      totalpost: totalPost,
+      totalsavedpost: savedPost
+    }
+    await statistics.create(statisticsObj)
 
   },
   null,

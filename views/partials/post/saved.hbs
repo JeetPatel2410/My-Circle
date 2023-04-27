@@ -24,9 +24,6 @@
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
         </div>
         <a href="#" class="d-block"><img src="./uploads/{{this.dataa.imageId}}" class="card-img-top"
@@ -60,11 +57,11 @@
 {{/if}}
 {{/each}}
 <ul class="pagination" style="margin-left: -10px;">
-  {{#each pageArrySave}}
-  <li class="page-item" id="pagination-list">
-    <p style="width: 33px;" class="save-post-page" data-id="{{this}}">{{this}}</p>
-  </li>
-  {{/each}}
-  </ul>
+    {{#each pageArrySave}}
+    <li class="page-item" id="pagination-list">
+        <p style="width: 33px;" class="save-post-page" data-id="{{this}}">{{this}}</p>
+    </li>
+    {{/each}}
+</ul>
 
 <script src="javascripts/pagewise/timeline.js"></script>

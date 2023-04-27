@@ -161,6 +161,7 @@ $(document).ready(function () {
             type: 'post',
             url: `/post/save`,
             success: function (response) {
+                $("#filter-sort-header").hide()
                 $('#posts').html(response)
             },
             error: function (err) {
@@ -192,6 +193,7 @@ $(document).ready(function () {
             type: 'get',
             url: `/user`,
             success: function (response) {
+                $(".searchbar").hide()
                 $("#filter-sort-header").replaceWith(`<header class="navbar navbar-expand-md navbar-light sticky-top d-print-none" id="filter-sort-header">
                 <div class="container-xl">
                     <button type="button" class="btn btn-dark" id="user-sort-btn">Sort</button>
@@ -247,12 +249,14 @@ $(document).ready(function () {
         console.log("clicked++++++======+++++");
         const x = "a"
         const id = $(this).data('postid');
+        let archiev = $(this)
         // console.log(id);
         $.ajax({
             type: 'PUT',
             url: `/post/${id}/${id + x}`,
             success: function (response) {
-                window.location.reload();
+                archiev.closest(".card").remove();
+                // window.location.reload();
             },
             error: function (err) {
                 alert(err.responseJSON.message)
@@ -301,8 +305,8 @@ $(document).ready(function () {
         })
     })
 
+    // paggination saved post
     $(".save-post-page").unbind().click(function () {
-    //    console.log($(this).data("id"));
        const page = $(this).data("id")
         $.ajax({
             url: `/post/save?page=${page}`,

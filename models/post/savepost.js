@@ -7,7 +7,6 @@ const option = {
     }
 }
 
-
 const savepostSchema = new mongoose.Schema({
     postBy: {
         type: mongoose.Schema.Types.ObjectId,
@@ -22,15 +21,5 @@ const savepostSchema = new mongoose.Schema({
         ref: "posts"
     }
 },option);
-
-
-// postSchema.pre("findOneAndUpdate", async function (next) {
-//     // console.log(this);
-
-//     let text = this._update.image;
-//     let result = text.replace("public", ".");
-//     this.set({ image: result })
-//     next();
-// });
 
 module.exports = mongoose.model("postsavebies", savepostSchema);      

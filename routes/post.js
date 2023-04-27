@@ -254,7 +254,6 @@ router.post('/save', async function (req, res, next) {
 
 
         let totalPost = countSavePostData.length;
-        console.log(saveData);
         let pageCount = Math.round(totalPost / limit);
         let pageArrySave = [];
         for (let i = 1; i <= pageCount; i++) {
