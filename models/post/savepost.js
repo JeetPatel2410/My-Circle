@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const option = {
-    collection: "postsaveby",
+    collection: "postsavebies",
     timestamps: {
         createdAt: "createdOn",
         updatedAt: "updatedOn",
@@ -33,4 +33,4 @@ const savepostSchema = new mongoose.Schema({
 //     next();
 // });
 
-module.exports = mongoose.model("postsaveby", savepostSchema);      
+module.exports = mongoose.model("postsavebies", savepostSchema);      

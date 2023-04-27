@@ -1,7 +1,7 @@
 $(document).ready(function () {
-    console.log("=====++++++++++++++++++");
+    // console.log("=====++++++++++++++++++");
     $(".submit-btn").submit(function (e) {
-        console.log("=====")
+        // console.log("=====")
         e.preventDefault();
     })
 

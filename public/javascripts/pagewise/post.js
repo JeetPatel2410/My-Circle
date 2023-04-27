@@ -7,23 +7,7 @@ var loadFile = function (event) {
     }
 };
 $(document).ready(function () {
-    // $(".submitbtn").click(function (event) {
-    //     event.preventDefault();
-    // })
-    // $(".editbutton").unbind().click(function(){
-    //     const id = $(this).attr('id');
-    //     $.ajax({
-    //         url: `/post/${id}`,
-    //         type: 'PUT',
-    //         success: function (response) {
-    //             alert(response.message)
-    //             // window.location.href = 'http://localhost:3000'
-    //         },
-    //         error: function (err) {
-    //             alert(err.responseJSON.message)
-    //         }
-    //     })
-    // })
+    // Edit Modal Form
     $("#post-edit-form").validate({
         rules: {
             title: {
@@ -67,10 +51,7 @@ $(document).ready(function () {
         }
     })
 
-
-
-
-
+    // Post create Modal Form
     $("#post-add-form").validate({
         rules: {
 

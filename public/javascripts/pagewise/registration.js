@@ -5,6 +5,32 @@ $(document).ready(function () {
         e.preventDefault();
     })
 
+    
+    $("#email-validation").hide()
+    $("#email").keyup(function () {
+        var VAL = this.value;
+        var emailregex = new RegExp(/^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/);
+        if (!emailregex.test(VAL)) {
+            $("#email-validation").show();
+        }
+        if (emailregex.test(VAL)) {
+            $("#email-validation").hide();
+        }
+    });
+
+    $("#password-validation").hide()
+    $("#password").keyup(function () {
+        var VAL = this.value;
+        var password = new RegExp(/^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8,15}$/);
+        if (!password.test(VAL)) {
+            $("#password-validation").show();
+        }
+        if (password.test(VAL)) {
+            $("#password-validation").hide();
+        }
+    });
+
+    // User Registraion    
     $("#save-user").validate({
         rules: {
             firstname: {
@@ -15,7 +41,7 @@ $(document).ready(function () {
             },
             email: {
                 required: true,
-                remote:"/email"
+                remote: "/email"
             },
             gender: {
                 required: true
@@ -37,7 +63,7 @@ $(document).ready(function () {
             },
             email: {
                 required: "  Please enter email",
-                remote:"Email already exists !"
+                remote: "Email already exists !"
             },
             gender: {
                 required: "Please "

@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 const savepost = require('../models/post/savepost');
 const save = require('../models/users/save');
 
-
+// Storage
 const maxSize = 1 * 1000 * 1000;
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -33,10 +33,8 @@ const storage = multer.diskStorage({
 
 var upload = multer({ storage: storage, limits: { fileSize: maxSize } })
 
+// Create Post
 router.post('/', upload.single('postavatar'), async function (req, res, next) {
-    // console.log("herere");
-    // console.log(req.file);
-    // console.log(req.body);
     const id = new mongoose.Types.ObjectId(req.user._id)
     const { title, description } = req.body
     const userPostData = {
@@ -52,13 +50,9 @@ router.post('/', upload.single('postavatar'), async function (req, res, next) {
     });
 });
 
+// Unsave Post
 router.get("/:id", async function (req, res, next) {
-    // console.log(req.params);
-    // console.log(req.file);
-
     const editPost = await post.findById(req.params.id).lean();
-    // console.log(editPost);
-    // res.render("partials/post/edit", { editPost: editPost })
     res.status(201).json({
         status: 201,
         data: editPost,
@@ -66,29 +60,8 @@ router.get("/:id", async function (req, res, next) {
     });
 })
 
-// var maxSize = 1 * 1000 * 1000;
-// const editStorage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//         console.log("000000000000000000000000");
-//         cb(null, 'public/edit/uploads/')
-//     },
-//     filename: function (req, file, cb) {
-//         const ext = path.extname(file.originalname);
-//         if (ext === ".txt" || ext === ".png" || ext === ".jpeg") {
-//             const uniqueSuffix = (req.user._id) + '-' + Date.now() + path.extname(file.originalname)
-//             cb(null, uniqueSuffix)
-//         } else {
-//             // cb(null, '');    
-//             return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
-//         }
-//     }
-// })
-
-// var uploads = multer({ editStorage: editStorage, limits: { fileSize: maxSize } })
-
+// Edit,Archiev,Save
 router.put('/:id/:postId', upload.single('editavatar'), async function (req, res, next) {
-
-
     // archiev post
     if (req.params.postId.slice(24, 25)) {
         console.log("insideeeeeeee");
@@ -155,41 +128,9 @@ router.put('/:id/:postId', upload.single('editavatar'), async function (req, res
 
 });
 
-
+// Saved Post
 router.post('/save', async function (req, res, next) {
     try {
-        console.log("oooooooooooooooooooooooooooooooooooooooooooo");
-        // const saveData = await savepost.aggregate([{
-        //     $lookup: {
-        //         from: "users",
-        //         let: { id: "$postBy" },
-        //         pipeline: [{
-        //             $match: {
-        //                 $expr: {
-        //                     $eq: ["$_id", "$$id"]
-        //                 }
-        //             }
-        //         }],
-        //         as: "data"
-        //     }
-        // }, {
-        //     $lookup: {
-        //         from: "posts",
-        //         let: { id: "$postId" },
-        //         pipeline: [{
-        //             $match: {
-        //                 $expr: {
-        //                     $eq: ["$_id", "$$id"]
-        //                 }
-        //             }
-        //         }],
-        //         as: "postdetails"
-        //     }
-        // }])
-        // console.log(saveData);
-       
-        
-
         const saveData = await savepost.aggregate([{
             $lookup: {
                 from: "posts",
@@ -223,9 +164,6 @@ router.post('/save', async function (req, res, next) {
         }, {
             $unwind: "$postdetails"
         }])
-        // const saveData = []
-        // saveData.push(saveDatas)
-        console.log(saveData,"saveData");
         res.render('dashboard', { title: 'dashboard', saveData: saveData, layout: "blank", logInUser: req.user });
     } catch (error) {
         console.log(error);

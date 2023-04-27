@@ -1,16 +1,10 @@
 var express = require('express');
 var router = express.Router();
 const multer = require('multer')
-// const upload = multer({ dest: 'uploads/' })
 const path = require("path")
 const user = require('../models/users/save');
 const { log } = require('console');
-
-// const passport = require("passport");
-/* GET users listing. */
-
 var maxSize = 1 * 1000 * 1000;
-
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     console.log("000000000000000000000000");
@@ -30,32 +24,22 @@ const storage = multer.diskStorage({
 
 var upload = multer({ storage: storage, limits: { fileSize: maxSize } })
 
+// User Profile Updated
 router.put('/', upload.single('avatar'), async function (req, res, next) {
-
-  console.log(req.file);
-  // console.log("11111111111111111111");
-  // console.log(req.body);
   const { fname, lname } = req.body
-
   const obj = {
     firstname: fname,
     lastname: lname,
     image: req.file.path
   }
 
-
   let text = req.file.path;
   let result = text.replace("public", ".");
   req.user.firstname = fname;
   req.user.lastname = lname;
   req.user.image = result;
-  // console.log(req.user.firstname); 
 
   await user.updateOne({ _id: req.user._id }, obj);
-  // console.log('fname333333333');
-  // req.app.locals.fname = 'AAAAAAAAAAAAAAAA';
-  // console.log(req.user);
-
   res.status(201).json({
     status: 201,
     message: "user Updated succsefully"
@@ -114,8 +98,8 @@ router.get('/', async function (req, res, next) {
   }
 });
 
+// Sort User
 router.get('/sort/:type', async function (req, res, next) {
-
   try {
     const sortObj = {
       $sort: {
@@ -174,8 +158,8 @@ router.get('/sort/:type', async function (req, res, next) {
   }
 });
 
+// Search User
 router.get('/search', async function (req, res, next) {
-
   try {
     console.log(req.query.search);
     let conditionObj = {}
@@ -227,7 +211,7 @@ router.get('/search', async function (req, res, next) {
           as: "savedPost"
         }
 
-      }, {$match:conditionObj}, {
+      }, { $match: conditionObj }, {
         $project: {
           savedPost: { $size: "$savedPost" },
           ToatalPost: { $size: "$TotalPost" },

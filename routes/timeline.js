@@ -4,53 +4,12 @@ const post = require("../models/post/save")
 const user = require('../models/users/save');
 const mongoose = require("mongoose");
 
+// TimeLine
 router.get('/', async function (req, res, next) {
 
     let limit = 2;
     let page = req.query.page ? req.query.page : 1;
     let skip = (limit * (page - 1));
-
-    // const postData = await post.aggregate([{
-    //     $match: { isArchiev: false }
-    // }, {
-    //     $sort: {
-    //         createdOn: -1
-    //     }
-    // }, {
-    //     $skip: skip
-    // }, {
-    //     $limit: limit
-    // }, {
-    //     $lookup: {
-    //         from: "users",
-    //         let: { id: "$postBy" },
-    //         pipeline: [{
-    //             $match: {
-    //                 $expr: {
-    //                     $eq: ["$_id", "$$id"]
-    //                 }
-    //             }
-    //         }],
-    //         as: "data"
-    //     }
-    // },
-    // {
-    //     $unwind: "$data"
-    // },
-    // {
-    //     $project: {
-    //         "_id": 1,
-    //         "data._id": 1,
-    //         "data.image": 1,
-    //         "title": 1,
-    //         "description": 1,
-    //         "data.firstname": 1,
-    //         "data.lastname": 1,
-    //         "imageId": 1,
-    //         "createdOn": 1,
-    //         "postBy": 1
-    //     }
-    // }])
     const id = new mongoose.Types.ObjectId(req.user._id);
     const postData = await post.aggregate([{
         $match: { isArchiev: false }
@@ -110,29 +69,21 @@ router.get('/', async function (req, res, next) {
         }
     }])
 
-
     let totalPost = await post.countDocuments({ isArchiev: false });
     let pageCount = Math.round(totalPost / limit);
     let pageArry = [];
     for (let i = 1; i <= pageCount; i++) {
         pageArry.push(i);
     }
-
-
-    // console.log(postData,"postdatatatattatatatatatatattat");
     res.render('dashboard', { title: 'dashboard', postData: postData, logInUser: req.user, pageArry: pageArry });
 })
 
+// Post Filter,Search,Searching
 router.get('/posts', async function (req, res, next) {
-    console.log("==============================================");
 
-    console.log(req.query, "QUERYYYYYYY");
     let limit = 2;
     let page = req.query.page ? req.query.page : 1;
     let skip = (limit * (page - 1));
-
-
-    // console.log(req.query);
     const id = new mongoose.Types.ObjectId(req.user._id);
 
 
@@ -171,7 +122,6 @@ router.get('/posts', async function (req, res, next) {
         ]
     }
 
-    console.log(conditionObj);
     const postData = await post.aggregate([{
         $match: conditionObj
     }, {
@@ -255,112 +205,14 @@ router.get('/posts', async function (req, res, next) {
     }, {
         $sort: sortObj
     }]);
-    // let totalPost = await post.countDocuments({ isArchiev: false });
     let totalPost = countData.length;
     let pageCount = Math.round(totalPost / limit);
     let pageArrys = [];
     for (let i = 1; i <= pageCount; i++) {
         pageArrys.push(i);
     }
-    console.log(postData);
-    console.log(pageArrys, "pageaaraaaaay");
-    res.render('dashboard', { title: 'dashboard', postData: postData,layout:"blank", logInUser: req.user, pageArrys: pageArrys });
-
+    res.render('dashboard', { title: 'dashboard', postData: postData, layout: "blank", logInUser: req.user, pageArrys: pageArrys });
 
 })
 
-
-// router.get('/:filter/:id', async function (req, res, next) {
-//     console.log(req.params);
-
-//     if (req.params.filter == "title") {
-//         var set = {
-//             $sort: {
-//                 "title": -1,
-//             }
-//         }
-//     }
-//     if (req.params.filter == "datetime") {
-//         var set = {
-//             $sort: {
-//                 "createdOn": -1,
-//             }
-//         }
-//     }
-
-
-//     if (req.params.id == "mine-post") {
-//         var obj = { $match: { "data._id": id } }
-//     }
-//     else if (req.params.id == "others-post") {
-//         var obj = { $match: { "data._id": { $ne: id } } }
-//     }
-//     else if (req.params.id == "all-post") {
-//         var obj = { $match: { "isArchiev": false } }
-//         // var set = {
-//         //     $sort: {
-//         //         "title": 1,
-//         //         createdOn: -1
-//         //     }
-//         // }
-//     }
-//     else {
-//         var obj = {
-//             $match: {
-//                 $or: [
-//                     {
-//                         "title": {
-//                             $regex: req.params.id, $options: "i"
-//                         }
-//                     },
-//                     {
-//                         "description": {
-//                             $regex: req.params.id, $options: "i"
-//                         }
-//                     }
-//                 ]
-//             }
-//         }
-//     }
-
-
-//     const postData = await post.aggregate([{ $match: { isArchiev: false } }, {
-//         $lookup: {
-//             from: "users",
-//             let: { id: "$postBy" },
-//             pipeline: [{
-//                 $match: {
-//                     $expr: {
-//                         $eq: ["$_id", "$$id"]
-//                     }
-//                 }
-//             }],
-//             as: "data"
-//         }
-//     },
-//     {
-//         $unwind: "$data"
-//     },
-//     {
-//         $project: {
-//             "_id": 1,
-//             "isArchiev": 1,
-//             "data._id": 1,
-//             "data.image": 1,
-//             "title": 1,
-//             "description": 1,
-//             "data.firstname": 1,
-//             "data.lastname": 1,
-//             "imageId": 1,
-//             "createdOn": 1,
-//             "postBy": 1
-//         }
-//     },
-//         obj
-//         , set])
-//     console.log(postData);
-//     res.render('dashboard', { title: 'dashboard', postData: postData, layout: "blank", logInUser: req.user });
-
-
-// })
 module.exports = router;

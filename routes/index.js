@@ -5,6 +5,7 @@ const user = require('../models/users/save');
 const post = require("../models/post/save")
 const passport = require("passport");
 /* GET home page. */
+// Landing Page
 router.get('/', async function (req, res, next) {
   let limit = 2;
   let page = req.query.page ? req.query.page : 1;
@@ -61,11 +62,12 @@ router.get('/', async function (req, res, next) {
   res.render('dashboard', { title: 'landing', landingData: landingData, layout: "landing", pageArrylanding: pageArrylanding });
 });
 
+// Registration
 router.get('/registration', function (req, res, next) {
-
   res.render('registration', { title: 'Express', layout: 'login' });
 });
 
+// Remote Email
 router.get('/email', async function (req, res, next) {
   const isExists = await user.countDocuments({ email: req.query.email })
   console.log(isExists);
@@ -73,11 +75,17 @@ router.get('/email', async function (req, res, next) {
   res.send(value)
 })
 
-
-
-
+// Save User 
 router.post('/save', async function (req, res, next) {
   try {
+    var VAL = req.body.email;
+    var emailregex = new RegExp(/^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/);
+    if (!emailregex.test(VAL)) {
+     return res.status(403).json({
+        status: 403,
+        message: "Please Enter Valid Email !"
+      });
+    }
     console.log("hererererer");
     const { firstname, lastname, email, gender, password, confirmpassword } = req.body
     const userData = {
@@ -105,6 +113,7 @@ router.post('/save', async function (req, res, next) {
 
 });
 
+// Login User AUTH
 router.post('/login', async function (req, res, next) {
   try {
     passport.authenticate("local", function (err, user, info) {
@@ -136,7 +145,7 @@ router.post('/login', async function (req, res, next) {
 
 });
 
-
+// login Auth
 router.get('/login', function (req, res, next) {
   if (!req.isAuthenticated()) {
     return res.render("login", {
@@ -146,6 +155,7 @@ router.get('/login', function (req, res, next) {
   }
 });
 
+// Logout
 router.get("/logout", function (req, res, next) {                   //User Logout
   console.log("hererererererererer");
   req.logout();

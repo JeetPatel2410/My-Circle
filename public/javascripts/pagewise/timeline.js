@@ -9,14 +9,12 @@ var loadFile = function (event) {
 count = 1;
 $(document).ready(function () {
 
-
+    // Function() Create Coman URL
     function geturl() {
         let url = "/timeline/posts"
         const sort = $("#post-sorting").val();
         const filter = $("#show-posts").val();
         const search = $("#search-val").val();
-        // const page = $(".common-filter").data("id")
-        // console.log(page);
 
         if (filter) {
             url += `?filter=${filter}`;
@@ -30,15 +28,10 @@ $(document).ready(function () {
             url += `&search=${search}`;
         }
 
-        // if(page){
-        //     url += `&page=${page}`;
-        // }
-
         return url
-
     }
 
-
+    // Save Post
     $(".savebtn").unbind().click(function () {
         const id = $(this).attr('id');
         const postId = $(this).attr('data-id');
@@ -48,7 +41,6 @@ $(document).ready(function () {
             success: function (response) {
                 alert(response.message)
                 window.location.reload();
-                // window.location.href = 'http://localhost:3000'
             },
             error: function (err) {
                 alert(err.responseJSON.message)
@@ -56,7 +48,7 @@ $(document).ready(function () {
         })
     })
 
-
+    // Edit Profile
     $("#user-update-form").validate({
         rules: {
             fname: {
@@ -75,7 +67,6 @@ $(document).ready(function () {
             }
         }, submitHandler: function (form) {
             const formData = new FormData($(form)[0]);
-
             $.ajax({
                 url: "/user",
                 method: 'PUT',
@@ -94,53 +85,13 @@ $(document).ready(function () {
         }
     })
 
-    // $("#mine-post").unbind().click(function () {
-    //     // console.log($(this).attr("id"));
-    //     console.log(geturl());
-    //     // const id = $(this).attr("id")
-    //     $.ajax({
-    //         url: geturl(),
-    //         type: 'get',
-    //         success: function (response) {
-    //             // console.log(response);
-    //             $('#posts').html(response)
-    //         },
-    //         error: function (err) {
-    //             alert(err.responseJSON.message)
-    //         }
-    //     })
-
-    // })
-
-    // $("#others-post").unbind().click(function () {
-    //     console.log($(this).attr("id"));
-    //     const id = $(this).attr("id")
-    //     $.ajax({
-    //         url: geturl(),
-    //         type: 'get',
-    //         success: function (response) {
-    //             // console.log(response);
-    //             $('#posts').html(response)
-    //         },
-    //         error: function (err) {
-    //             alert(err.responseJSON.message)
-    //         }
-    //     })
-
-    // })
-
-    // herererrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr
+    // Filter & Sorting Post
     $(".common-filter").unbind().change(function () {
         console.log(geturl());
-        // console.log($(this).attr("id"));
-        // const id = $(this).attr("id");
-
-
         $.ajax({
             url: geturl(),
             type: 'get',
             success: function (response) {
-
                 $('#posts').html(response)
             },
             error: function (err) {
@@ -150,10 +101,9 @@ $(document).ready(function () {
 
     })
 
+    // Searching
     $(".common-filter").unbind().click(function () {
         console.log(geturl());
-        // console.log($(this).attr("id"));
-        // const id = $(this).attr("id")
         $.ajax({
             url: geturl(),
             type: 'get',
@@ -167,6 +117,7 @@ $(document).ready(function () {
 
     })
 
+    // Paggination with commna URL
     $(".common-filter").unbind().click(function () {
         console.log($(this).data("id"));
         let page = $(this).data("id")
@@ -179,8 +130,6 @@ $(document).ready(function () {
             url: url,
             type: 'get',
             success: function (response) {
-                // console.log(response);
-                // $("#pagination-list").replaceWith(`<li class="page-item" id="pagination-list"><a class="page-link" href="/timeline?page={{this}}">{{this}}</a></li>`)
                 $('#posts').html(response)
             },
             error: function (err) {
@@ -190,29 +139,8 @@ $(document).ready(function () {
 
     })
 
-
-    // allll post
-    // $("#all-post").unbind().click(function () {
-    //     // console.log($(this).attr("id"));
-    //     const id = $(this).attr("id")
-    //     $.ajax({
-    //         url: geturl(),
-    //         type: 'get',
-    //         success: function (response) {
-    //             // console.log(response);
-    //             $('#posts').html(response)
-    //         },
-    //         error: function (err) {
-    //             alert(err.responseJSON.message)
-    //         }
-    //     })
-
-    // })
-
-
-
+    //  Logout
     $("#logout").click(function () {
-
         $.ajax({
             url: `/logout`,
             type: 'get',
@@ -226,66 +154,21 @@ $(document).ready(function () {
         })
 
     })
-    // $("#search-btn").unbind().click(function () {
-    //     // console.log($("#search-val").val());
-    //     const id = $("#search-val").val();
-    //     $.ajax({
-    //         url: `/timeline/filter/${id}`,
-    //         type: 'get',
-    //         success: function (response) {
-    //             $('#posts').html(response)
-    //             // window.location.href = 'http://localhost:3000'
-    //         },
-    //         error: function (err) {
-    //             alert(err.responseJSON.message)
-    //         }
-    //     })
 
-    // })
-
-    // $("#search-val").unbind().keyup(function () {
-    //     // console.log($("#search-val").val());
-    //     // const id = $("#search-val").val();
-    //     console.log(geturl());
-    //     // const search = "search"
-
-    //     $.ajax({
-    //         url: `${geturl()}search`,
-    //         type: 'get',
-    //         success: function (response) {
-    //             $('#posts').html(response)
-    //             // window.location.href = 'http://localhost:3000'
-    //         },
-    //         error: function (err) {
-    //             alert(err.responseJSON.message)
-    //         }
-    //     })
-
-    // })
-
-
-
-
-
-
+    // Show Saved Post
     $("#saved-post").unbind().click(function () {
-        // console.log("clicked");
         $.ajax({
             type: 'post',
             url: `/post/save`,
             success: function (response) {
-                // alert("sucesssss")
-                // console.log(response);
-                // $("#filter-sort-header").replaceWith("")
                 $('#posts').html(response)
-                // window.location.reload();
             },
             error: function (err) {
-                // alert(err.responseJSON.message)
             }
         })
     })
 
+    // Unsave Button
     $(".unsavebtn").unbind().click(function () {
         console.log("clicked");
         const id = $(this).attr('id');
@@ -296,7 +179,6 @@ $(document).ready(function () {
             success: function (response) {
                 alert(response.message)
                 window.location.reload();
-                // window.location.href = 'http://localhost:3000'
             },
             error: function (err) {
                 alert(err.responseJSON.message)
@@ -304,15 +186,12 @@ $(document).ready(function () {
         })
     })
 
-
+    //Show Users
     $("#all-users").unbind().click(function () {
         $.ajax({
             type: 'get',
             url: `/user`,
             success: function (response) {
-                // alert("sucesssss")
-                // console.log(response);
-                
                 $("#filter-sort-header").replaceWith(`<header class="navbar navbar-expand-md navbar-light sticky-top d-print-none" id="filter-sort-header">
                 <div class="container-xl">
                     <button type="button" class="btn btn-dark" id="user-sort-btn">Sort</button>
@@ -320,18 +199,15 @@ $(document).ready(function () {
                   <input type="text" class="form-control" placeholder="Search for…" id="search-user-val" style="width:336px;margin-left:906px">
                 </div>
                 </div>
-                
-                
             </header><br>`)
                 $('#posts').html(response)
-                // window.location.reload();
             },
             error: function (err) {
-                // alert(err.responseJSON.message)
             }
         })
     })
 
+    // Search User
     $("#search-user-val").unbind().keyup(function () {
         console.log($(this).val());
         $.ajax({
@@ -346,25 +222,17 @@ $(document).ready(function () {
         })
     })
 
-
+    // Edit Post
     $(document).unbind().on('click', "#edit-btn", function () {
-
         const id = $(this).data('postid');
-        // console.log(id);
         $.ajax({
             type: 'GET',
             url: `/post/${id}`,
             success: function (response) {
-
-                // $("#post-edit-form").("#")
-                // console.log(response);
                 $("#post-edit-form #titlefield").val(response.data.title);
                 $("#post-edit-form #description").val(response.data.description);
                 $("#post-edit-form #post-image").replaceWith(`<img id="post-image" src="../uploads/${response.data.imageId}" style="height: 200px;width: 200px;" />`);
                 $("#post-edit-form #hiddenval").replaceWith(`<input type="hidden" id="hiddenval" name="hiddenval" value="${response.data._id}">`)
-
-                // $('#image').html('<img src="data:image/png;base64,' + img  + '" />');
-                // // window.location.href = 'http://localhost:3000'
                 $("#edit-post").modal("show")
             },
             error: function (err) {
@@ -373,7 +241,7 @@ $(document).ready(function () {
         })
     })
 
-    // $("#archive-btn").unbind().click(function ()
+    // Archiev Btn
     $(document).off('click', "#archive-btn").on('click', "#archive-btn", function () {
         // $("#archive-btn").click(function () {
         console.log("clicked++++++======+++++");
@@ -391,9 +259,8 @@ $(document).ready(function () {
             }
         })
     })
-    // $(".user-sort-btn").click(function ()
-    // 
 
+    // Sort User
     $(document).off('click', "#user-sort-btn").on('click', "#user-sort-btn", function () {
         console.log("clickedddddd=========+++++");
         count++;
@@ -419,18 +286,18 @@ $(document).ready(function () {
         })
     })
 
+    // Report
     $("#report").unbind().click(function () {
         console.log("clicked");
         $.ajax({
             url: "/report",
             type: 'get',
             success: function (response) {
-                console.log(response);
+                $('#posts').html(response)
             },
             error: function (err) {
                 alert(err.responseJSON.message)
             }
         })
-
     })
 })
