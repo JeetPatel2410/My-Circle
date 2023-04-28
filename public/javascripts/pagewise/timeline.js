@@ -311,7 +311,7 @@ $(document).ready(function () {
             url: "/report",
             type: 'get',
             success: function (response) {
-              
+                $("#filter-sort-header").hide()
                 $('#posts').html(response)
             },
             error: function (err) {
