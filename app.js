@@ -51,7 +51,8 @@ const hbs = exphbs.create({
       return null;
     },
     formatdate: function (date) {
-      return moment(date).format("MMMM Do YYYY, h:mm:ss a")
+      // return moment(date).format("MMMM Do YYYY, h:mm:ss a")
+      return moment(date).fromNow();
     },
     isMatch: function (logInUser, postUser) {
       if (logInUser == postUser) {

@@ -32,13 +32,16 @@
   {{> user/users}}
   {{/if}}
 
-  {{#if reportData}}
+  {{!-- {{#if reportData}}
+  {{> user/report}}
+  {{/if}} --}}
+
+  {{#if array}}
   {{> user/report}}
   {{/if}}
 
   {{#if saveData}}
   {{> post/saved}}
-  
   {{/if}}
 
 

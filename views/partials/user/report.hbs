@@ -1,4 +1,4 @@
-<div class="dsort">
+{{!-- <div class="dsort">
     <table class="table">
         <thead>
             <tr style="34px">
@@ -17,4 +17,28 @@
             {{/each}}
         </tbody>
     </table>
-</div>
+</div> --}}
+<canvas id="myChart" style="width:100%;max-width:1000px ;margin-left:120px"></canvas>
+
+<script>
+
+    //const xValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
+    new Chart("myChart", {
+        type: "line",
+        data: {
+            labels: [{{ arrayDate }}],
+        datasets: [{
+            label:"Total Uploaded Post",
+            data: [{{ array }}],
+        borderColor: "black",
+        fill: false
+    }, {
+        label:"Total saved Post",
+        data: [{{ arraySaved }}],
+        borderColor: "red",
+        fill: false
+    }]
+  },
+        options: { legend: { display: true } }
+  });
+</script>

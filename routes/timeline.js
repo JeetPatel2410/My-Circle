@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 // TimeLine
 router.get('/', async function (req, res, next) {
 
-    let limit = 2;
+    let limit = 3;
     let page = req.query.page ? req.query.page : 1;
     let skip = (limit * (page - 1));
     const id = new mongoose.Types.ObjectId(req.user._id);
@@ -70,7 +70,11 @@ router.get('/', async function (req, res, next) {
     }])
 
     let totalPost = await post.countDocuments({ isArchiev: false });
-    let pageCount = Math.round(totalPost / limit);
+    var pageCount = (Math.round(totalPost / limit));
+    if (totalPost % 3 != 0) {
+        pageCount = (Math.round(totalPost / limit)) + 1;
+    }
+    // let pageCount = Math.floor(totalPost / limit);
     let pageArry = [];
     for (let i = 1; i <= pageCount; i++) {
         pageArry.push(i);
@@ -81,7 +85,7 @@ router.get('/', async function (req, res, next) {
 // Post Filter,Search,Searching
 router.get('/posts', async function (req, res, next) {
 
-    let limit = 2;
+    let limit = 3;
     let page = req.query.page ? req.query.page : 1;
     let skip = (limit * (page - 1));
     const id = new mongoose.Types.ObjectId(req.user._id);
@@ -132,7 +136,7 @@ router.get('/posts', async function (req, res, next) {
         $skip: skip
     }, {
         $limit: limit
-    },  {
+    }, {
         $lookup: {
             from: "postsavebies",
             localField: "_id",
@@ -147,7 +151,7 @@ router.get('/posts', async function (req, res, next) {
             }],
             as: "savedatatatat"
         }
-    },{
+    }, {
         $lookup: {
             from: "users",
             let: { id: "$postBy" },
@@ -222,11 +226,15 @@ router.get('/posts', async function (req, res, next) {
         $sort: sortObj
     }]);
     let totalPost = countData.length;
-    let pageCount = Math.round(totalPost / limit);
+    var pageCount = Math.round(totalPost / limit);
+    if (totalPost % 3 != 0) {
+        var pageCount = (Math.round(totalPost / limit)) + 1;
+    }
     let pageArrys = [];
     for (let i = 1; i <= pageCount; i++) {
         pageArrys.push(i);
     }
+    console.log(pageCount, "count");
     res.render('dashboard', { title: 'dashboard', postData: postData, layout: "blank", logInUser: req.user, pageArrys: pageArrys });
 
 })

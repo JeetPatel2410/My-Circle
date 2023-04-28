@@ -291,12 +291,27 @@ $(document).ready(function () {
     })
 
     // Report
+    // $("#report").unbind().click(function () {
+    //     console.log("clicked");
+    //     $.ajax({
+    //         url: "/report",
+    //         type: 'get',
+    //         success: function (response) {
+    //             $('#posts').html(response)
+    //         },
+    //         error: function (err) {
+    //             alert(err.responseJSON.message)
+    //         }
+    //     })
+    // })
+
     $("#report").unbind().click(function () {
         console.log("clicked");
         $.ajax({
             url: "/report",
             type: 'get',
             success: function (response) {
+              
                 $('#posts').html(response)
             },
             error: function (err) {
@@ -307,7 +322,7 @@ $(document).ready(function () {
 
     // paggination saved post
     $(".save-post-page").unbind().click(function () {
-       const page = $(this).data("id")
+        const page = $(this).data("id")
         $.ajax({
             url: `/post/save?page=${page}`,
             type: 'post',

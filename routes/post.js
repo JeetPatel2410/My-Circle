@@ -7,6 +7,7 @@ const savePost = require("../models/post/savepost")
 const mongoose = require("mongoose");
 const savepost = require('../models/post/savepost');
 const save = require('../models/users/save');
+const { log } = require('console');
 
 // Storage
 const maxSize = 1 * 1000 * 1000;
@@ -171,15 +172,15 @@ router.put('/:id/:postId', upload.single('editavatar'), async function (req, res
 // });
 
 // paggeination save post
+
 router.post('/save', async function (req, res, next) {
     try {
-
-        let limit = 2;
+        let limit = 3;
         let page = req.query.page ? req.query.page : 1;
         let skip = (limit * (page - 1));
-        // const id = new mongoose.Types.ObjectId(req.user._id);
+        const id = new mongoose.Types.ObjectId(req.user._id);
 
-        const saveData = await savepost.aggregate([{
+        const saveData = await savepost.aggregate([{ $match: { saveBy: id } },{
             $skip: skip
         }, {
             $limit: limit
@@ -218,7 +219,7 @@ router.post('/save', async function (req, res, next) {
         }])
 
 
-        const countSavePostData = await savepost.aggregate([{
+        const countSavePostData = await savepost.aggregate([{ $match: { saveBy: id } }, {
             $lookup: {
                 from: "posts",
                 let: { id: "$postId" },
@@ -251,14 +252,19 @@ router.post('/save', async function (req, res, next) {
         }, {
             $unwind: "$postdetails"
         }])
-
-
+        
+        
         let totalPost = countSavePostData.length;
-        let pageCount = Math.round(totalPost / limit);
+        console.log(totalPost);
+        var pageCount = (Math.round(totalPost / limit));
+        if (totalPost % 3 != 0) {
+             pageCount = (Math.round(totalPost / limit)) + 1;
+        }
         let pageArrySave = [];
         for (let i = 1; i <= pageCount; i++) {
             pageArrySave.push(i);
         }
+        console.log(pageArrySave,"pagesavearray");
         res.render('dashboard', { title: 'dashboard', saveData: saveData, layout: "blank", logInUser: req.user, pageArrySave: pageArrySave });
     } catch (error) {
         console.log(error);

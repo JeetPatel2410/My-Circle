@@ -1,61 +1,62 @@
-{{!-- {{log 'saveData' saveData}} --}}
-{{!-- {{log logInUser._id "logedinnnn"}} --}}
-{{#each saveData}}
-{{#if (isSave ../logInUser._id "==" saveBy)}}
-<div class="col-sm-6 col-lg-4">
-    <div class="card card-sm">
-        {{!-- {{log _id}} --}}
-        <div class="card-body">
-            <div class="d-flex align-items-center">
-                <span class="avatar me-3 rounded" style="background-image: url({{this.postdetails.image}})"></span>
-                <div>
-                    <div>{{this.postdetails.firstname}} {{this.postdetails.lastname}}</div>
-                </div>
-                {{{isMatch ../logInUser._id saveData.data._id}}}
-                <div class="dropdown-menu">
-                    <div class="dropdown-menu-columns">
-                        <div class="dropdown-menu-column ">
-                            <a class="dropdown-item" href="javascript:void(0)" data-postid={{_id}} id="edit-btn">
-                                Edit Post
-                            </a>
-                            <a class="dropdown-item" href="javascript:void(0)" data-postid={{_id}} id="archive-btn">
-                                Archive
-                            </a>
+<div class="row row-cards">
+    {{#each saveData}}
+    {{#if (isSave ../logInUser._id "==" saveBy)}}
+    <div class="col-sm-6 col-lg-4">
+        <div class="card card-sm">
+            {{!-- {{log _id}} --}}
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <span class="avatar me-3 rounded" style="background-image: url({{this.postdetails.image}})"></span>
+                    <div>
+                        <div>{{this.postdetails.firstname}} {{this.postdetails.lastname}}</div>
+                    </div>
+                    {{{isMatch ../logInUser._id saveData.data._id}}}
+                    <div class="dropdown-menu">
+                        <div class="dropdown-menu-columns">
+                            <div class="dropdown-menu-column ">
+                                <a class="dropdown-item" href="javascript:void(0)" data-postid={{_id}} id="edit-btn">
+                                    Edit Post
+                                </a>
+                                <a class="dropdown-item" href="javascript:void(0)" data-postid={{_id}} id="archive-btn">
+                                    Archive
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <a href="#" class="d-block"><img src="./uploads/{{this.dataa.imageId}}" class="card-img-top"
-                style="height: 424px;width:500px"></a>
-        <h3 class="card-title" style="margin-left: 16px;margin-top:14px">{{this.dataa.title}}</h3>
-        <p class="card-text" style="margin-left: 16px; margin-top:3px">{{this.dataa.description}}</p>
-        <p style="margin-left: 17px;">{{formatdate createdOn}}</p>
+            <a href="#" class="d-block"><img src="./uploads/{{this.dataa.imageId}}" class="card-img-top"
+                    style="height: 424px;width:500px"></a>
+            <h3 class="card-title" style="margin-left: 16px;margin-top:14px">{{this.dataa.title}}</h3>
+            <p class="card-text" style="margin-left: 16px; margin-top:3px">{{this.dataa.description}}</p>
+            <p style="margin-left: 17px;">{{formatdate createdOn}}</p>
 
-        <div class="d-flex justify-content-end">
-            {{!-- <svg xmlns="http://www.w3.org/2000/svg" class="unsavebtn icon icon-tabler icon-tabler-bookmark "
-                width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                stroke-linecap="round" stroke-linejoin="round" id="{{postBy}}" data-id="{{_id}}"
-                style="margin-top: -74px;margin-right: 31px;">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2"></path> --}}
-                <svg xmlns="http://www.w3.org/2000/svg"
-                    class="unsavebtn icon icon-tabler icon-tabler-triangle-inverted-filled" width="24" height="24"
-                    id="{{this.dataa.postBy}}" data-id="{{this.dataa._id}}" viewBox="0 0 24 24" stroke-width="2"
-                    stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"
+            <div class="d-flex justify-content-end">
+                {{!-- <svg xmlns="http://www.w3.org/2000/svg" class="unsavebtn icon icon-tabler icon-tabler-bookmark "
+                    width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round" id="{{postBy}}" data-id="{{_id}}"
                     style="margin-top: -74px;margin-right: 31px;">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                    <path
-                        d="M19.007 3a3 3 0 0 1 2.828 3.94l-.068 .185l-.062 .126l-7.09 12.233a3 3 0 0 1 -5.137 .19l-.103 -.173l-7.1 -12.25l-.061 -.125a3 3 0 0 1 2.625 -4.125l.058 -.001l.06 .002l.043 -.002h14.007z"
-                        stroke-width="0" fill="currentColor"></path>
-                </svg>
-        </div>
+                    <path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2"></path> --}}
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                        class="unsavebtn icon icon-tabler icon-tabler-triangle-inverted-filled" width="24" height="24"
+                        id="{{this.dataa.postBy}}" data-id="{{this.dataa._id}}" viewBox="0 0 24 24" stroke-width="2"
+                        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"
+                        style="margin-top: -74px;margin-right: 31px;">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path
+                            d="M19.007 3a3 3 0 0 1 2.828 3.94l-.068 .185l-.062 .126l-7.09 12.233a3 3 0 0 1 -5.137 .19l-.103 -.173l-7.1 -12.25l-.061 -.125a3 3 0 0 1 2.625 -4.125l.058 -.001l.06 .002l.043 -.002h14.007z"
+                            stroke-width="0" fill="currentColor"></path>
+                    </svg>
+            </div>
 
-    </div><br>
+        </div><br>
+    </div>
+
+    {{/if}}
+    {{/each}}
 </div>
-
-{{/if}}
-{{/each}}
+{{#if pageArrySave}}
 <ul class="pagination" style="margin-left: -10px;">
     {{#each pageArrySave}}
     <li class="page-item" id="pagination-list">
@@ -63,5 +64,6 @@
     </li>
     {{/each}}
 </ul>
+{{/if}}
 
 <script src="javascripts/pagewise/timeline.js"></script>

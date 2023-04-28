@@ -7,7 +7,7 @@ const passport = require("passport");
 /* GET home page. */
 // Landing Page
 router.get('/', async function (req, res, next) {
-  let limit = 2;
+  let limit = 3;
   let page = req.query.page ? req.query.page : 1;
   let skip = (limit * (page - 1));
   const landingData = await post.aggregate([{ $match: { isArchiev: false } }, {
@@ -54,11 +54,15 @@ router.get('/', async function (req, res, next) {
     }
   }])
   let totalPost = await post.countDocuments({ isArchiev: false });
-  let pageCount = Math.round(totalPost / limit);
+  var pageCount = (Math.round(totalPost / limit));
+  if (totalPost % 3 != 0) {
+     pageCount = (Math.round(totalPost / limit)) + 1;
+}
   let pageArrylanding = [];
   for (let i = 1; i <= pageCount; i++) {
     pageArrylanding.push(i);
   }
+  console.log(pageArrylanding);
   res.render('dashboard', { title: 'landing', landingData: landingData, layout: "landing", pageArrylanding: pageArrylanding });
 });
 

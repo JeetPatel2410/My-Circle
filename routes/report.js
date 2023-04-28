@@ -6,11 +6,28 @@ const post = require("../models/post/save");
 const statistics = require("../models/statistics");
 const mongoose = require("mongoose");
 const savepost = require('../models/post/savepost');
+const moment = require('moment');
 
 // Report
+// router.get('/', async function (req, res, next) {
+//   const reportData = await statistics.find({}).lean()
+//   res.render('dashboard', { title: 'dashboard', reportData: reportData, layout: "blank", logInUser: req.user });
+// });
+
+// report chart 
 router.get('/', async function (req, res, next) {
-  const reportData = await statistics.find({}).lean()
-  res.render('dashboard', { title: 'dashboard', reportData: reportData, layout: "blank", logInUser: req.user });
+  const reportData = await statistics.aggregate([{ $project: { "totalsavedpost": 1, "_id": 0, "totalpost": 1, "createdOn": 1 } }])
+  const arraySaved = []
+  const arrayDate = []
+  const array = []
+  for (let value of reportData) {
+    array.push(value.totalpost)
+    arraySaved.push(value.totalsavedpost)
+    arrayDate.push(moment(value.createdOn).format('YYYY_MM_DD_hh_mm'))
+  }
+
+  res.render('dashboard', { title: 'dashboard', array: array, arraySaved: arraySaved, arrayDate: arrayDate, layout: "blank", logInUser: req.user });
+
 });
 
 
