@@ -7,7 +7,6 @@ const { log } = require('console');
 var maxSize = 1 * 1000 * 1000;
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    console.log("000000000000000000000000");
     cb(null, 'public/images/')
   },
   filename: function (req, file, cb) {
@@ -16,34 +15,58 @@ const storage = multer.diskStorage({
       const uniqueSuffix = (req.user._id) + path.extname(file.originalname)
       cb(null, uniqueSuffix)
     } else {
-      // cb(null, '');    
+      console.log(121212121);
       return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
     }
   }
 })
 
-var upload = multer({ storage: storage, limits: { fileSize: maxSize } })
-
+// var upload = multer({ storage: storage, limits: { fileSize: maxSize } })
+const uploadMulter = multer({ storage: storage, limits: { fileSize: maxSize } }).single('avatar')
 // User Profile Updated
-router.put('/', upload.single('avatar'), async function (req, res, next) {
-  const { fname, lname } = req.body
-  const obj = {
-    firstname: fname,
-    lastname: lname,
-    image: req.file.path
+router.put('/', /*upload.single('avatar'), */async function (req, res, next) {
+  try {
+    uploadMulter(req, res, async function (err) {
+      if (err instanceof multer.MulterError) {
+        // A Multer error occurred when uploading.
+        return res.status(403).json({
+          status: 403,
+          message: err.message
+        });
+      } else if (err) {
+        // An unknown error occurred when uploading.
+        return res.status(403).json({
+          status: 403,
+          message: err.message
+        });
+      } else {
+        const { fname, lname } = req.body
+        const obj = {
+          firstname: fname,
+          lastname: lname,
+          image: req.file.path
+        }
+
+        let text = req.file.path;
+        let result = text.replace("public", ".");
+        req.user.firstname = fname;
+        req.user.lastname = lname;
+        req.user.image = result;
+
+        await user.updateOne({ _id: req.user._id }, obj);
+        res.status(201).json({
+          status: 201,
+          message: "user Updated succsefully"
+        });
+      }
+    })
+
+  } catch (error) {
+    res.status(403).json({
+      status: 403,
+      message: error.message
+    });
   }
-
-  let text = req.file.path;
-  let result = text.replace("public", ".");
-  req.user.firstname = fname;
-  req.user.lastname = lname;
-  req.user.image = result;
-
-  await user.updateOne({ _id: req.user._id }, obj);
-  res.status(201).json({
-    status: 201,
-    message: "user Updated succsefully"
-  });
 });
 
 router.get('/', async function (req, res, next) {

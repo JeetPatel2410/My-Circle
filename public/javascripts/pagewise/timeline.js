@@ -80,6 +80,7 @@ $(document).ready(function () {
                 },
                 error: function (err) {
                     alert(err.responseJSON.message)
+                    // console.log(err.responseJSON);
                 }
             })
         }
@@ -334,4 +335,6 @@ $(document).ready(function () {
             }
         })
     })
+
+    
 })
