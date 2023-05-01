@@ -336,5 +336,19 @@ $(document).ready(function () {
         })
     })
 
+    //Like - btn
+    $(".like-btn").unbind().dblclick(function () {
+        const id = $(this).attr("id")
+        $.ajax({
+            url: `/post/like?postId=${id}`,
+            type: 'post',
+            success: function (response) {
+                window.location.reload();
+            },
+            error: function (err) {
+                alert(err.responseJSON.message)
+            }
+        })
+    })
     
 })

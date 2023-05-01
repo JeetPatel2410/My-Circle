@@ -6,6 +6,7 @@ const post = require("../models/post/save")
 const savePost = require("../models/post/savepost")
 const mongoose = require("mongoose");
 const savepost = require('../models/post/savepost');
+const likepost = require('../models/post/like');
 const save = require('../models/users/save');
 const { log } = require('console');
 
@@ -180,7 +181,7 @@ router.post('/save', async function (req, res, next) {
         let skip = (limit * (page - 1));
         const id = new mongoose.Types.ObjectId(req.user._id);
 
-        const saveData = await savepost.aggregate([{ $match: { saveBy: id } },{
+        const saveData = await savepost.aggregate([{ $match: { saveBy: id } }, {
             $skip: skip
         }, {
             $limit: limit
@@ -252,24 +253,46 @@ router.post('/save', async function (req, res, next) {
         }, {
             $unwind: "$postdetails"
         }])
-        
-        
+
+
         let totalPost = countSavePostData.length;
         console.log(totalPost);
         var pageCount = (Math.round(totalPost / limit));
         if (totalPost % 3 != 0) {
-             pageCount = (Math.round(totalPost / limit)) + 1;
+            pageCount = (Math.round(totalPost / limit)) + 1;
         }
         let pageArrySave = [];
         for (let i = 1; i <= pageCount; i++) {
             pageArrySave.push(i);
         }
-        console.log(pageArrySave,"pagesavearray");
+        console.log(pageArrySave, "pagesavearray");
         res.render('dashboard', { title: 'dashboard', saveData: saveData, layout: "blank", logInUser: req.user, pageArrySave: pageArrySave });
     } catch (error) {
         console.log(error);
     }
 });
 
-
+// LIke Post
+router.post('/like', async function (req, res, next) {
+    console.log(req.query.postId);
+    // const isExists = await likepost.aggregate([{ $match: { $and: [{ likeBy: req.user._id }, { postId: req.query.postId }] } }])
+    const isExists = await likepost.exists({ likeBy: req.user._id, postId: req.query.postId })
+    console.log(isExists);
+    if (isExists) {
+        res.status(201).json({
+            status: 201,
+            message: "post Unliked"
+        });
+        return await likepost.deleteOne({ postId: req.query.postId })
+    }
+    await likepost.create(
+        {
+            likeBy: req.user._id,
+            postId: req.query.postId
+        })
+    res.status(201).json({
+        status: 201,
+        message: "Post Liked succsefully"
+    });
+});
 module.exports = router;
