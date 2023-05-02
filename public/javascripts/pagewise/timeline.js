@@ -343,6 +343,7 @@ $(document).ready(function () {
             url: `/post/like?postId=${id}`,
             type: 'post',
             success: function (response) {
+                // alert(response.message)
                 window.location.reload();
             },
             error: function (err) {
@@ -350,5 +351,21 @@ $(document).ready(function () {
             }
         })
     })
-    
+
+    // like-posyt-list
+    $(".liked-post").unbind().mouseenter(function () {
+        const likeId = $(this).attr("id")
+        console.log(likeId);
+        $.ajax({
+            url: `?likeId=${likeId}`,
+            type: 'get',
+            success: function (response) {
+                $(`.${likeId}`).css({ "display": "block" });
+                // window.location.reload();
+            },
+            error: function (err) {
+                alert(err.responseJSON.message)
+            }
+        })
+    })
 })

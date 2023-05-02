@@ -4,6 +4,7 @@ var md5 = require('md5');
 const user = require('../models/users/save');
 const post = require("../models/post/save")
 const passport = require("passport");
+var nodemailer = require('nodemailer');
 /* GET home page. */
 // Landing Page
 router.get('/', async function (req, res, next) {
@@ -91,6 +92,30 @@ router.post('/save', async function (req, res, next) {
       });
     }
     console.log("hererererer");
+
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'pa3597230@gmail.com',
+        pass: 'wqmbouyneavxctxr'
+      }
+    });
+    
+    var mailOptions = {
+      from: 'pa3597230@gmail.com',
+      to: req.body.email,
+      subject: 'Sending Email using Node.js',
+      text: 'That was easy!'
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error,"error");
+      } else {
+        console.log('Email sent: ' + info.messageId);
+      }
+    });
+
     const { firstname, lastname, email, gender, password, confirmpassword } = req.body
     const userData = {
       firstname: firstname,

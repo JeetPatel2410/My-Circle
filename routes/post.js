@@ -274,16 +274,16 @@ router.post('/save', async function (req, res, next) {
 
 // LIke Post
 router.post('/like', async function (req, res, next) {
-    console.log(req.query.postId);
-    // const isExists = await likepost.aggregate([{ $match: { $and: [{ likeBy: req.user._id }, { postId: req.query.postId }] } }])
+    console.log(req.user._id, "user");
     const isExists = await likepost.exists({ likeBy: req.user._id, postId: req.query.postId })
-    console.log(isExists);
+    // const isExists = await likepost.aggregate([{ $match: { likeBy: req.user._id, postId: req.query.postId } }])
+    console.log(isExists, "isexistssss");
     if (isExists) {
         res.status(201).json({
             status: 201,
             message: "post Unliked"
         });
-        return await likepost.deleteOne({ postId: req.query.postId })
+        return await likepost.deleteOne({ _id: isExists._id})
     }
     await likepost.create(
         {

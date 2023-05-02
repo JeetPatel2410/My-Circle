@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const post = require("../models/post/save")
 const user = require('../models/users/save');
+const likepost = require('../models/post/like');
 const mongoose = require("mongoose");
 
 // TimeLine
@@ -111,7 +112,7 @@ router.get('/', async function (req, res, next) {
                     }
                 }
             }],
-            as: "likedata"
+            as: "like"
         }
     }, {
         $lookup: {
@@ -144,6 +145,37 @@ router.get('/', async function (req, res, next) {
     },
     {
         $unwind: "$data"
+    },{
+        $lookup: {
+            from: "like",
+            localField: "_id",
+            foreignField: "postId",
+            pipeline: [{
+                $lookup: {
+                    from: "users",
+                    localField: "likeBy",
+                    foreignField: "_id",
+                    as: "details"
+                }
+            },{
+                $unwind: "$details"
+            },{
+                $group: {
+                    _id: null,
+                    likedBy: {
+                        $push: {
+                            $concat: ['$details.firstname', " " ,'$details.lastname']
+                        }
+                    }
+                }
+            }],
+            as: "likedata"
+        }
+    },{
+        $unwind: {
+            path: "$likedata",
+            preserveNullAndEmptyArrays: true
+        }
     },
     {
         $project: {
@@ -158,9 +190,39 @@ router.get('/', async function (req, res, next) {
             "createdOn": 1,
             "postBy": 1,
             "savedatatatat": 1,
-            "likedata":1
+            "like":1,
+            "likedata": 1,
+            "likedBy": "$likedata.likedBy",
+            "likedByCount": {
+                $size: {
+                    $ifNull: ["$likedata.likedBy", []]
+                }
+            }
         }
     }])
+    // console.log("lkfsdnflksd");
+    console.log(postData);
+
+    const likePostId = new mongoose.Types.ObjectId(req.query.likeId);
+
+    const likedPostList = await likepost.aggregate([{
+        $lookup: {
+            from: "users",
+            let: { id: "$likeBy" },
+            pipeline: [{
+                $match: {
+                    $expr: {
+                        $eq: ["$_id", "$$id"]
+                    }
+                }
+
+            },
+            { $project: { "_id": 0, "firstname": 1, "lastname": 1 } }
+            ],
+            as: "likedata"
+        }
+    }, { $unwind: "$likedata" }, { $group: { _id: "$postId", count: { $sum: 1 }, likelist: { $push: "$likedata.firstname" } } }, { $match: { _id: likePostId } }])
+    // console.log(likedPostList[0]);
 
     let totalPost = await post.countDocuments({ isArchiev: false });
     var pageCount = (Math.round(totalPost / limit));
@@ -172,7 +234,7 @@ router.get('/', async function (req, res, next) {
     for (let i = 1; i <= pageCount; i++) {
         pageArry.push(i);
     }
-    res.render('dashboard', { title: 'dashboard', postData: postData, logInUser: req.user, pageArry: pageArry });
+    res.render('dashboard', { title: 'dashboard', postData: postData, logInUser: req.user, pageArry: pageArry, likedPostList: likedPostList[0] });
 })
 // Post Filter,Search,Searching
 // router.get('/posts', async function (req, res, next) {
@@ -398,7 +460,7 @@ router.get('/posts', async function (req, res, next) {
                     }
                 }
             }],
-            as: "likedata"
+            as: "like"
         }
     }, {
         $lookup: {
@@ -433,6 +495,38 @@ router.get('/posts', async function (req, res, next) {
         $unwind: "$data"
     },
     {
+        $lookup: {
+            from: "like",
+            localField: "_id",
+            foreignField: "postId",
+            pipeline: [{
+                $lookup: {
+                    from: "users",
+                    localField: "likeBy",
+                    foreignField: "_id",
+                    as: "details"
+                }
+            },{
+                $unwind: "$details"
+            },{
+                $group: {
+                    _id: null,
+                    likedBy: {
+                        $push: {
+                            $concat: ['$details.firstname', " " ,'$details.lastname']
+                        }
+                    }
+                }
+            }],
+            as: "likedata"
+        }
+    },{
+        $unwind: {
+            path: "$likedata",
+            preserveNullAndEmptyArrays: true
+        }
+    },
+    {
         $project: {
             "_id": 1,
             "isArchiev": 1,
@@ -445,7 +539,14 @@ router.get('/posts', async function (req, res, next) {
             "createdOn": 1,
             "postBy": 1,
             "savedatatatat": 1,
-            "likedata": 1
+            "like":1,
+            "likedata": 1,
+            "likedBy": "$likedata.likedBy",
+            "likedByCount": {
+                $size: {
+                    $ifNull: ["$likedata.likedBy", []]
+                }
+            }
         }
     }, {
         $sort: sortObj
@@ -499,7 +600,7 @@ router.get('/posts', async function (req, res, next) {
     for (let i = 1; i <= pageCount; i++) {
         pageArrys.push(i);
     }
-    console.log(postData, "postdatat");
+    // console.log(postData, "postdatat");
     res.render('dashboard', { title: 'dashboard', postData: postData, layout: "blank", logInUser: req.user, pageArrys: pageArrys });
 
 })

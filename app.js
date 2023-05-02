@@ -269,7 +269,7 @@ var job = new CronJob(
       }
     })
 
-    // console.log(savedPost); 
+    // Collection 
     const statisticsObj = {
       totalpost: totalPost,
       totalsavedpost: savedPost
