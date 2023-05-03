@@ -6,9 +6,9 @@ const post = require("../models/post/save")
 const savePost = require("../models/post/savepost")
 const mongoose = require("mongoose");
 const savepost = require('../models/post/savepost');
+const comment = require('../models/post/comment');
 const likepost = require('../models/post/like');
 const save = require('../models/users/save');
-const { log } = require('console');
 
 // Storage
 const maxSize = 1 * 1000 * 1000;
@@ -52,14 +52,46 @@ router.post('/', upload.single('postavatar'), async function (req, res, next) {
     });
 });
 
-// Unsave Post
-router.get("/:id", async function (req, res, next) {
-    const editPost = await post.findById(req.params.id).lean();
-    res.status(201).json({
-        status: 201,
-        data: editPost,
-        message: "post Unsave"
-    });
+// Give data to modal
+router.get("/", async function (req, res, next) {
+    const id = req.query.id;
+    const data = await comment.aggregate([
+        {
+            $match: {
+                postId: new mongoose.Types.ObjectId(id)
+            }
+        },
+        {
+            $sort: { createdOn: -1 }
+        },
+        {
+            $lookup: {
+                from: 'users',
+                localField: 'commentBy',
+                foreignField: '_id',
+                pipeline: [{
+                    $project: {
+                        firstname: 1,
+                        lastname: 1,
+                        image: 1
+                    }
+                }],
+                as: 'commentUser'
+            }
+        },
+        {
+            $unwind:"$commentUser"
+        },
+        {
+            $project: {
+                comment: 1,
+                createdOn: 1,
+                commentUser: '$commentUser'
+            }
+        }
+    ])
+    res.render('partials/post/commentList',  { data : data, layout : 'blank'})
+    // const data = await comment.find({postId : id})
 })
 
 // Edit,Archiev,Save
@@ -274,16 +306,14 @@ router.post('/save', async function (req, res, next) {
 
 // LIke Post
 router.post('/like', async function (req, res, next) {
-    console.log(req.user._id, "user");
     const isExists = await likepost.exists({ likeBy: req.user._id, postId: req.query.postId })
     // const isExists = await likepost.aggregate([{ $match: { likeBy: req.user._id, postId: req.query.postId } }])
-    console.log(isExists, "isexistssss");
     if (isExists) {
         res.status(201).json({
             status: 201,
             message: "post Unliked"
         });
-        return await likepost.deleteOne({ _id: isExists._id})
+        return await likepost.deleteOne({ _id: isExists._id })
     }
     await likepost.create(
         {
@@ -294,5 +324,27 @@ router.post('/like', async function (req, res, next) {
         status: 201,
         message: "Post Liked succsefully"
     });
+});
+
+// Comment on post
+router.post('/comment', async function (req, res, next) {
+    try {
+        const postBy = new mongoose.Types.ObjectId(req.body.postById);
+        const postId = new mongoose.Types.ObjectId(req.body.postId);
+        const commentBy = new mongoose.Types.ObjectId(req.user._id);
+        const commentObj = {
+            comment: req.body.comment,
+            commentBy: commentBy,
+            postBy: postBy,
+            postId: postId
+        }
+        await comment.create(commentObj)
+        res.status(201).json({
+            status: 201,
+            message: "Comment"
+        });
+    } catch (error) {
+
+    }
 });
 module.exports = router;

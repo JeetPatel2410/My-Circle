@@ -173,7 +173,7 @@ router.get('/', async function (req, res, next) {
         }
     },{
         $unwind: {
-            path: "$likedata",
+            path: "$likedata",           
             preserveNullAndEmptyArrays: true
         }
     },
@@ -201,7 +201,6 @@ router.get('/', async function (req, res, next) {
         }
     }])
     // console.log("lkfsdnflksd");
-    console.log(postData);
 
     const likePostId = new mongoose.Types.ObjectId(req.query.likeId);
 

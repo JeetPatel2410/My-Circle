@@ -96,4 +96,78 @@ $(document).ready(function () {
             })
         }
     })
+
+    // $(".comment").unbind().click(function () {
+    //     const postId = $(this).attr("id")
+    //     console.log(postId);
+    //     // $.ajax({
+    //     //     url: `/post/comment?postId=${postId}`,
+    //     //     type: 'post',
+    //     //     success: function (response) {
+    //     //         $('#posts').html(response)
+    //     //     },
+    //     //     error: function (err) {
+    //     //         alert(err.responseJSON.message)
+    //     //     }
+    //     // })
+    // })
+
+
+    $(".comment").unbind().click(function () {
+        const id = $(this).attr('id');
+        console.log(id,"clicked");
+        $.ajax({
+            type: 'GET',
+            url: `/post?id=${id}`,
+            success: function (response) {
+                $('#commentBody').html(response)
+            },
+            error: function (err) {
+                alert(err.responseJSON.message)
+            }
+        })
+    })
+
+
+    $("#post-comment-form").validate({
+        rules: {
+            comment: {
+                required: true
+            }
+        },
+        messages: {
+            comment: {
+                required: "This field is required"
+            }
+        }, submitHandler: function (form) {
+            var $form = $(form)
+            $.ajax({
+                url: "/post/comment",
+                method: 'POST',
+                data: $form.serialize(),
+                success: function (response) {
+                    alert(response.message)
+                },
+                error: function (err) {
+                    alert(err.responseJSON.message)
+                }
+            })
+        }
+    })
+    // $(".commnetbutton").unbind().click(function () {
+    //     $.ajax({
+    //         type: 'post',
+    //         url: `/post/comment`,
+    //         success: function (response) {
+
+    //         },
+    //         error: function (err) {
+    //             alert(err.responseJSON.message)
+    //         }
+    //     })
+    // })
+
+
+
+
 })

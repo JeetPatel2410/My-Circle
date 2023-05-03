@@ -1,0 +1,12 @@
+{{#each data}}
+{{log this "datatattattatatatcoommmennttt"}}
+<div class="card-body">
+    <div class="d-flex align-items-center">
+        <span class="avatar me-3 rounded" style="background-image: url({{commentUser.image}})"></span>
+        <div>
+            <div><h4>{{commentUser.firstname}} {{commentUser.lastname}}</h4>Comment : {{comment}}</div>
+        </div>
+        
+    </div>
+</div><br>
+{{/each}}

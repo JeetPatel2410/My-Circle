@@ -154,6 +154,7 @@ passport.use(new localStrategy({
       email: 1,
       password: 1,
       email: 1,
+      isVerify:1
     }).then(async function (user) {
       if (!user) {
         return done(null, false, {

@@ -230,7 +230,7 @@ $(document).ready(function () {
         const id = $(this).data('postid');
         $.ajax({
             type: 'GET',
-            url: `/post/${id}`,
+            url: `/post?id=${id}`,
             success: function (response) {
                 $("#post-edit-form #titlefield").val(response.data.title);
                 $("#post-edit-form #description").val(response.data.description);
@@ -353,9 +353,8 @@ $(document).ready(function () {
     })
 
     // like-posyt-list
-    $(".liked-post").unbind().mouseenter(function () {
+    $(".liked-post").unbind().click(function () {
         const likeId = $(this).attr("id")
-        console.log(likeId);
         $.ajax({
             url: `?likeId=${likeId}`,
             type: 'get',
@@ -368,4 +367,6 @@ $(document).ready(function () {
             }
         })
     })
+    
+
 })

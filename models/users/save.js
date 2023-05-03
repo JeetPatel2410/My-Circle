@@ -14,6 +14,9 @@ const userSchema = new mongoose.Schema({           //User Schema
     lastname: {
         type: String,
         required: true,
+    }, isVerify: {
+        type: Boolean,
+        default: false
     },
     email: {
         type: String,
@@ -34,12 +37,12 @@ const userSchema = new mongoose.Schema({           //User Schema
         type: String,
         required: true
     }
-},option);
+}, option);
 
 
 userSchema.pre("updateOne", async function (next) {
     // console.log(this);
-    
+
     let text = this._update.image;
     let result = text.replace("public", ".");
     this.set({ image: result })

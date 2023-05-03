@@ -6,6 +6,21 @@ const post = require("../models/post/save")
 const passport = require("passport");
 var nodemailer = require('nodemailer');
 /* GET home page. */
+// Verify user
+router.get('/verify', async function (req, res, next) {
+
+  try {
+    const isExists = await user.exists({ email: req.query.email })
+    const id = isExists._id;
+    console.log(id, "IsExists");
+    await user.findByIdAndUpdate(id, { isVerify: true })
+    res.end();
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+
 // Landing Page
 router.get('/', async function (req, res, next) {
   let limit = 3;
@@ -57,8 +72,8 @@ router.get('/', async function (req, res, next) {
   let totalPost = await post.countDocuments({ isArchiev: false });
   var pageCount = (Math.round(totalPost / limit));
   if (totalPost % 3 != 0) {
-     pageCount = (Math.round(totalPost / limit)) + 1;
-}
+    pageCount = (Math.round(totalPost / limit)) + 1;
+  }
   let pageArrylanding = [];
   for (let i = 1; i <= pageCount; i++) {
     pageArrylanding.push(i);
@@ -86,7 +101,7 @@ router.post('/save', async function (req, res, next) {
     var VAL = req.body.email;
     var emailregex = new RegExp(/^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/);
     if (!emailregex.test(VAL)) {
-     return res.status(403).json({
+      return res.status(403).json({
         status: 403,
         message: "Please Enter Valid Email !"
       });
@@ -100,17 +115,17 @@ router.post('/save', async function (req, res, next) {
         pass: 'wqmbouyneavxctxr'
       }
     });
-    
+
     var mailOptions = {
       from: 'pa3597230@gmail.com',
       to: req.body.email,
       subject: 'Sending Email using Node.js',
-      text: 'That was easy!'
+      html: `<a href="http://localhost:3000/verify?email=${req.body.email}">Click to verify your account</a>`
     };
-    
-    transporter.sendMail(mailOptions, function(error, info){
+
+    transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
-        console.log(error,"error");
+        console.log(error, "error");
       } else {
         console.log('Email sent: ' + info.messageId);
       }
@@ -156,11 +171,15 @@ router.post('/login', async function (req, res, next) {
         req.flash("error", "please enter valid login details")
         return res.redirect("/login")
       }
+      if (user.isVerify==false) {
+        req.flash("error", "Your Account is not verified yet !")
+        return res.redirect("/login")
+      }
       req.login(user, async function (err) {
         if (err) {
           return next(err);
         }
-        //  console.log(req.user);
+        
         res.redirect("/timeline")
         // res.render("addcatagory", {
         //     title: "Add-Catgory",

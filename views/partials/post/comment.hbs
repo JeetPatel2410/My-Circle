@@ -1,0 +1,47 @@
+<div class="modal modal-blur fade" id="comment-post" tabindex="-1" role="dialog" aria-hidden="true">
+    <form id="post-comment-form">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" >Add Comment</h5>
+                    <button type="button" class="comment-btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">Comment</label>
+                                <input type="text" class="form-control" name="comment" id="comment-field" >
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="postId-hidden" name="hiddenval" value="{{_id}}">
+                    <input type="hidden" id="postById-hidden" name="hiddenval" value="{{_id}}">
+                </div>
+                <div class="modal-body" id="commentBody">
+                    
+                </div>
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
+                        Cancel
+                    </a>
+                    <button type="submit" class="commnetbutton btn btn-dark">Add Comment</button>
+                    {{!-- <a href="#" class="btn btn-primary ms-auto" data-bs-dismiss="modal">
+                        <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
+                            stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M12 5l0 14" />
+                            <path d="M5 12l14 0" />
+                        </svg>
+                        Create new Post
+                    </a> --}}
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script src="javascripts/pagewise/post.js"></script>
