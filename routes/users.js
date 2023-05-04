@@ -244,12 +244,12 @@ router.get('/search', async function (req, res, next) {
           "createdOn": 1
         }
       }])
-    console.log(userInfo);
     res.render('dashboard', { title: 'All-Users', userInfo: userInfo, layout: "blank", logInUser: req.user });
   } catch (error) {
     console.log(error);
   }
 });
+
 
 
 

@@ -313,7 +313,7 @@ router.post('/save', async function (req, res, next) {
             pageArrySave.push(i);
         }
         console.log(pageArrySave, "pagesavearray");
-        res.render('dashboard', { title: 'dashboard', saveData: saveData, layout: "blank", logInUser: req.user, pageArrySave: pageArrySave });
+        res.render('partials/post/saved', { title: 'dashboard', saveData: saveData, layout: "blank", logInUser: req.user, pageArrySave: pageArrySave });
     } catch (error) {
         console.log(error);
     }

@@ -27,7 +27,7 @@ router.get('/', async function (req, res, next) {
     arraySaved.push(value.totalsavedpost)
     arrayDate.push(moment(value.createdOn).format('YYYY_MM_DD_hh_mm'))
   }
-  res.render('dashboard', { title: 'dashboard', array: array, arraySaved: arraySaved, arrayLiked: arrayLiked, arrayDate: arrayDate, layout: "blank", logInUser: req.user });
+  res.render('partials/user/report', { title: 'dashboard', array: array, arraySaved: arraySaved, arrayLiked: arrayLiked, arrayDate: arrayDate, layout: "blank", logInUser: req.user });
 
 });
 

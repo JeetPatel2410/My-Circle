@@ -278,15 +278,10 @@ $(document).ready(function () {
             type: 'get',
             url: `/user/sort/${type}`,
             success: function (response) {
-                // alert("sucesssss")
-                // console.log(response);
-                // $("#filter-sort-header").remove()
-
                 $('#posts').html(response)
-                // window.location.reload();
             },
             error: function (err) {
-                // alert(err.responseJSON.message)
+                alert(err.responseJSON.message)
             }
         })
     })

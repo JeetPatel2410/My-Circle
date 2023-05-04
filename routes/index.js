@@ -1,4 +1,5 @@
 var express = require('express');
+const otpGenerator = require('otp-generator');
 var router = express.Router();
 var md5 = require('md5');
 const user = require('../models/users/save');
@@ -6,6 +7,52 @@ const post = require("../models/post/save")
 const passport = require("passport");
 var nodemailer = require('nodemailer');
 /* GET home page. */
+
+/**
+ * If password forgoted
+ * Enter email
+ */
+router.get("/forgot", function (req, res) {
+  res.render("partials/user/forgotpwd", { layout: 'login' })
+})
+
+// Generate OTP.
+router.post("/forgot", function (req, res) {
+  // console.log(req.body,"herterererere");
+  const OTP = otpGenerator.generate(5, {
+    upperCaseAlphabets: true,
+    specialChars: false,
+  });
+  var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'pa3597230@gmail.com',
+      pass: 'wqmbouyneavxctxr'
+    }
+  });
+
+  var mailOptions = {
+    from: 'pa3597230@gmail.com',
+    to: req.body.email,
+    subject: 'Sending Email using Node.js',
+    html: `<p>Your otp is <h2>${OTP}</h2></p>`
+  };
+
+  transporter.sendMail(mailOptions, function (error, info) {
+    if (error) {
+      console.log(error, "error");
+    } else {
+      console.log('Email sent: ' + info.messageId);
+    }
+  });
+  res.render("partials/user/otp", { layout: 'login' })
+  // res.status(201).json({
+  //   status: 201,
+  //   message: "Otp generated SucessFully !"
+  // });  
+
+})
+
 // Verify user
 router.get('/verify', async function (req, res, next) {
 
@@ -19,7 +66,6 @@ router.get('/verify', async function (req, res, next) {
     console.log(error);
   }
 });
-
 
 // Landing Page
 router.get('/', async function (req, res, next) {
@@ -78,13 +124,12 @@ router.get('/', async function (req, res, next) {
   for (let i = 1; i <= pageCount; i++) {
     pageArrylanding.push(i);
   }
-  console.log(pageArrylanding);
   res.render('dashboard', { title: 'landing', landingData: landingData, layout: "landing", pageArrylanding: pageArrylanding });
 });
 
 // Registration
 router.get('/registration', function (req, res, next) {
-  res.render('registration', { title: 'Express', layout: 'login' });
+  res.render('registration', { title: 'registration', layout: 'login' });
 });
 
 // Remote Email
@@ -171,7 +216,7 @@ router.post('/login', async function (req, res, next) {
         req.flash("error", "please enter valid login details")
         return res.redirect("/login")
       }
-      if (user.isVerify==false) {
+      if (user.isVerify == false) {
         req.flash("error", "Your Account is not verified yet !")
         return res.redirect("/login")
       }
@@ -179,7 +224,7 @@ router.post('/login', async function (req, res, next) {
         if (err) {
           return next(err);
         }
-        
+
         res.redirect("/timeline")
         // res.render("addcatagory", {
         //     title: "Add-Catgory",

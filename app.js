@@ -21,12 +21,12 @@ var postRouter = require('./routes/post');
 var reportRouter = require('./routes/report');
 const savePost = require("./models/post/savepost");
 const likePost = require("./models/post/like");
-// const user = require('../models/users/save');
 const post = require("./models/post/save");
 const statistics = require("./models/statistics");
 
 var app = express();
 
+// Mongoose connection
 const mongoose = require('mongoose');
 require('custom-env').env()
 var router = express.Router();
@@ -42,6 +42,7 @@ async function main() {
 }
 main()
 
+// Hbs
 const hbs = exphbs.create({
   defaultLayout: 'main',
   extname: '.hbs',
@@ -51,10 +52,15 @@ const hbs = exphbs.create({
       this._sections[name] = options.fn(this);
       return null;
     },
+    // Date Formation To show Date in good Formate
     formatdate: function (date) {
       // return moment(date).format("MMMM Do YYYY, h:mm:ss a")
       return moment(date).fromNow();
     },
+    /**
+     * Edit And Archiev Button Match.
+     * Only Loggedin User can Edit & Archiev Post.
+     */
     isMatch: function (logInUser, postUser) {
       if (logInUser == postUser) {
         return `<a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown" data-bs-auto-close="outside"
@@ -70,6 +76,7 @@ const hbs = exphbs.create({
       </a>`;
       }
     },
+    // Set Save Button SVG.
     isSave: function (val1, comparison, val2) {
       switch (comparison) {
         case "==":
@@ -105,35 +112,11 @@ app.use(session({
   cookie: { secure: true }
 }));
 app.use(flash())
-// // comman midelware
-// app.use(async function (req, res, next) {
-//   const success = req.flash('success')
-//   const error = req.flash('error')
-//   if (success.length > 0) {
-//     res.locals.flash = {
-//       type: "success",
-//       message: success
-//     }
-//   }
-//   if (error.length > 0) {
-//     res.locals.flash = {
-//       type: "error",
-//       message: error
-//     }
-//   }
-//   console.log(req.user,"userrrr");
-//   if (req.user) {
-//     res.locals.fname = req.user.firstname;
-//     res.locals.lname = req.user.lastname;
-//   }
-//   next()
-// })
-
-
 app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Passport-Local
 passport.use(new localStrategy({
   usernameField: "email",
   passwordField: 'password',
@@ -180,7 +163,6 @@ passport.serializeUser(function (user, done) {
 
 passport.deserializeUser(function (user, done) {
   try {
-    // console.log("33333=====deeeserialize");
     done(null, user);
   } catch (error) {
     console.log(error);
@@ -204,11 +186,8 @@ app.use(async function (req, res, next) {
   }
 
   if (req.user) {
-    // console.log(req.user);
-    // console.log(req);
     let text = req.user.image;
     let result = text.replace("public", ".");
-    // console.log(result);
     res.locals.fname = req.user.firstname;
     res.locals.lname = req.user.lastname;
     res.locals.email = req.user.email;
@@ -219,10 +198,10 @@ app.use(async function (req, res, next) {
 
 app.use('/', indexRouter);
 
+// Login Authentication
 app.use(function (req, res, next) {
   console.log(req.isAuthenticated());
   if (req.isAuthenticated()) {
-    //req.isAuthenticated() will return true if user is logged in
     next();
   } else {
     res.redirect("/login");
@@ -253,11 +232,9 @@ app.use(function (err, req, res, next) {
 
 
 // Cron 
-
 var job = new CronJob(
   '*/60 */10 * * * *',
   async function () {
-    // console.log(moment().subtract(5, 'minutes').toDate());
     const totalPost = await post.countDocuments({
       createdOn: {
         $gte: moment().subtract(10, 'minutes').toDate(),
@@ -284,7 +261,6 @@ var job = new CronJob(
       totalLikedPost: likedPost
     }
     await statistics.create(statisticsObj)
-
   },
   null,
   true,
