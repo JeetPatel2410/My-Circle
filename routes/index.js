@@ -70,9 +70,9 @@ router.get('/', async function (req, res, next) {
     }
   }])
   let totalPost = await post.countDocuments({ isArchiev: false });
-  var pageCount = (Math.round(totalPost / limit));
+  var pageCount = (Math.floor(totalPost / limit));
   if (totalPost % 3 != 0) {
-    pageCount = (Math.round(totalPost / limit)) + 1;
+    pageCount = (Math.floor(totalPost / limit)) + 1;
   }
   let pageArrylanding = [];
   for (let i = 1; i <= pageCount; i++) {

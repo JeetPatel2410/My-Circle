@@ -12,10 +12,6 @@ const commentSchema = new mongoose.Schema({           //Comment Schema
         type: mongoose.Schema.Types.ObjectId,
         ref: "users",
     },
-    postBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "users",
-    },
     postId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "posts"

@@ -30,4 +30,8 @@ $(document).ready(function () {
         
         }
     })
+
+    $("#forgot-pwd").click(function(){
+    
+    })
 })

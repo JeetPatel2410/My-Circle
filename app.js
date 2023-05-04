@@ -20,6 +20,7 @@ var timelineRouter = require('./routes/timeline');
 var postRouter = require('./routes/post');
 var reportRouter = require('./routes/report');
 const savePost = require("./models/post/savepost");
+const likePost = require("./models/post/like");
 // const user = require('../models/users/save');
 const post = require("./models/post/save");
 const statistics = require("./models/statistics");
@@ -154,7 +155,7 @@ passport.use(new localStrategy({
       email: 1,
       password: 1,
       email: 1,
-      isVerify:1
+      isVerify: 1
     }).then(async function (user) {
       if (!user) {
         return done(null, false, {
@@ -269,11 +270,18 @@ var job = new CronJob(
         $lte: moment().toDate()
       }
     })
+    const likedPost = await likePost.countDocuments({
+      createdOn: {
+        $gte: moment().subtract(10, 'minutes').toDate(),
+        $lte: moment().toDate()
+      }
+    })
 
     // Collection 
     const statisticsObj = {
       totalpost: totalPost,
-      totalsavedpost: savedPost
+      totalsavedpost: savedPost,
+      totalLikedPost: likedPost
     }
     await statistics.create(statisticsObj)
 

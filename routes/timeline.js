@@ -84,7 +84,7 @@ const mongoose = require("mongoose");
 // })
 
 router.get('/', async function (req, res, next) {
-
+    console.log("in timelineeeee");
     let limit = 3;
     let page = req.query.page ? req.query.page : 1;
     let skip = (limit * (page - 1));
@@ -224,9 +224,10 @@ router.get('/', async function (req, res, next) {
     // console.log(likedPostList[0]);
 
     let totalPost = await post.countDocuments({ isArchiev: false });
-    var pageCount = (Math.round(totalPost / limit));
+    var pageCount = (Math.floor(totalPost / limit));
     if (totalPost % 3 != 0) {
-        pageCount = (Math.round(totalPost / limit)) + 1;
+        // console.log("here total post 33333333");
+        pageCount = (Math.floor(totalPost / limit)) + 1;
     }
     // let pageCount = Math.floor(totalPost / limit);
     let pageArry = [];
@@ -591,9 +592,9 @@ router.get('/posts', async function (req, res, next) {
         $sort: sortObj
     }]);
     let totalPost = countData.length;
-    var pageCount = Math.round(totalPost / limit);
+    var pageCount = Math.floor(totalPost / limit);
     if (totalPost % 3 != 0) {
-        var pageCount = (Math.round(totalPost / limit)) + 1;
+        var pageCount = (Math.floor(totalPost / limit)) + 1;
     }
     let pageArrys = [];
     for (let i = 1; i <= pageCount; i++) {

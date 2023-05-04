@@ -230,7 +230,7 @@ $(document).ready(function () {
         const id = $(this).data('postid');
         $.ajax({
             type: 'GET',
-            url: `/post?id=${id}`,
+            url: `/post/edit?id=${id}`,
             success: function (response) {
                 $("#post-edit-form #titlefield").val(response.data.title);
                 $("#post-edit-form #description").val(response.data.description);
@@ -352,7 +352,7 @@ $(document).ready(function () {
         })
     })
 
-    // like-posyt-list
+    // like-post-list
     $(".liked-post").unbind().click(function () {
         const likeId = $(this).attr("id")
         $.ajax({
@@ -367,6 +367,18 @@ $(document).ready(function () {
             }
         })
     })
-    
+
+    $("#homebtn").unbind().click(function () {
+        $.ajax({
+            url: `/timeline`,
+            type: 'get',
+            success: function (response) {
+                $('#main-page').html(response)
+            },
+            error: function (err) {
+                alert(err.responseJSON.message)
+            }
+        })
+    })
 
 })

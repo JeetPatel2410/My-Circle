@@ -53,6 +53,21 @@ router.post('/', upload.single('postavatar'), async function (req, res, next) {
 });
 
 // Give data to modal
+router.get("/edit", async function (req, res, next) {
+    // console.log(req.params);
+    // console.log(req.file);
+
+    const editPost = await post.findById(req.query.id).lean();
+    // console.log(editPost);
+    // res.render("partials/post/edit", { editPost: editPost })
+    res.status(201).json({
+        status: 201,
+        data: editPost,
+        message: "post Unsave"
+    });
+})
+
+// Comment render
 router.get("/", async function (req, res, next) {
     const id = req.query.id;
     const data = await comment.aggregate([
@@ -80,7 +95,7 @@ router.get("/", async function (req, res, next) {
             }
         },
         {
-            $unwind:"$commentUser"
+            $unwind: "$commentUser"
         },
         {
             $project: {
@@ -90,7 +105,7 @@ router.get("/", async function (req, res, next) {
             }
         }
     ])
-    res.render('partials/post/commentList',  { data : data, layout : 'blank'})
+    res.render('partials/post/commentList', { data: data, layout: 'blank' })
     // const data = await comment.find({postId : id})
 })
 
@@ -289,9 +304,9 @@ router.post('/save', async function (req, res, next) {
 
         let totalPost = countSavePostData.length;
         console.log(totalPost);
-        var pageCount = (Math.round(totalPost / limit));
+        var pageCount = (Math.floor(totalPost / limit));
         if (totalPost % 3 != 0) {
-            pageCount = (Math.round(totalPost / limit)) + 1;
+            pageCount = (Math.floor(totalPost / limit)) + 1;
         }
         let pageArrySave = [];
         for (let i = 1; i <= pageCount; i++) {
@@ -329,13 +344,11 @@ router.post('/like', async function (req, res, next) {
 // Comment on post
 router.post('/comment', async function (req, res, next) {
     try {
-        const postBy = new mongoose.Types.ObjectId(req.body.postById);
-        const postId = new mongoose.Types.ObjectId(req.body.postId);
+        const postId = new mongoose.Types.ObjectId(req.body.hiddenval);
         const commentBy = new mongoose.Types.ObjectId(req.user._id);
         const commentObj = {
             comment: req.body.comment,
             commentBy: commentBy,
-            postBy: postBy,
             postId: postId
         }
         await comment.create(commentObj)

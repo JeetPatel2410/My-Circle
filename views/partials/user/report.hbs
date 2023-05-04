@@ -28,16 +28,21 @@
         data: {
             labels: [{{ arrayDate }}],
         datasets: [{
-            label:"Total Uploaded Post",
+            label: "Total Uploaded Post",
             data: [{{ array }}],
         borderColor: "black",
         fill: false
     }, {
-        label:"Total saved Post",
+        label: "Total saved Post",
         data: [{{ arraySaved }}],
         borderColor: "red",
         fill: false
-    }]
+        }, {
+            label: "Total Liked Post",
+            data: [{{ arrayLiked }}],
+        borderColor: "green",
+        fill: false
+         }]
   },
         options: { legend: { display: true } }
   });

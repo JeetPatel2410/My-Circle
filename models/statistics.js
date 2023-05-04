@@ -14,7 +14,11 @@ const postSchema = new mongoose.Schema({           //User Schema
     },
     totalsavedpost: {
         type: String,
-        require:true
+        require: true
+    },
+    totalLikedPost: {
+        type: String,
+        require: true
     }
 }, option);
 

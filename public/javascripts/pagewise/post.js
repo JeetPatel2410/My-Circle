@@ -120,6 +120,7 @@ $(document).ready(function () {
             type: 'GET',
             url: `/post?id=${id}`,
             success: function (response) {
+                $("#postId-hidden").replaceWith(`<input type="hidden" id="postId-hidden" name="hiddenval" value="${id}">`)
                 $('#commentBody').html(response)
             },
             error: function (err) {
@@ -146,7 +147,7 @@ $(document).ready(function () {
                 method: 'POST',
                 data: $form.serialize(),
                 success: function (response) {
-                    alert(response.message)
+                    // alert(response.message)
                 },
                 error: function (err) {
                     alert(err.responseJSON.message)

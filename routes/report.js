@@ -16,17 +16,18 @@ const moment = require('moment');
 
 // report chart 
 router.get('/', async function (req, res, next) {
-  const reportData = await statistics.aggregate([{ $project: { "totalsavedpost": 1, "_id": 0, "totalpost": 1, "createdOn": 1 } }])
+  const reportData = await statistics.aggregate([{ $project: { "totalsavedpost": 1, "_id": 0, "totalpost": 1, "createdOn": 1, "totalLikedPost": 1 } }])
   const arraySaved = []
+  const arrayLiked = []
   const arrayDate = []
   const array = []
   for (let value of reportData) {
     array.push(value.totalpost)
+    arrayLiked.push(value.totalLikedPost)
     arraySaved.push(value.totalsavedpost)
     arrayDate.push(moment(value.createdOn).format('YYYY_MM_DD_hh_mm'))
   }
-
-  res.render('dashboard', { title: 'dashboard', array: array, arraySaved: arraySaved, arrayDate: arrayDate, layout: "blank", logInUser: req.user });
+  res.render('dashboard', { title: 'dashboard', array: array, arraySaved: arraySaved, arrayLiked: arrayLiked, arrayDate: arrayDate, layout: "blank", logInUser: req.user });
 
 });
 
