@@ -378,3 +378,9 @@ $(document).ready(function () {
     })
 
 })
+
+
+// const socket = io();
+// socket.on("hello",(arg)=>{
+//     console.log(arg);
+// })

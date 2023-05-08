@@ -24,7 +24,22 @@ const likePost = require("./models/post/like");
 const post = require("./models/post/save");
 const statistics = require("./models/statistics");
 
+
 var app = express();
+
+//Socket
+// const { createServer } = require("http");
+// const { Server } = require("socket.io");
+
+// const httpServer = createServer(app);
+// const io = new Server(httpServer, { /* options */ });
+
+// io.on("connection", (socket) => {
+//   // ...
+//   socket.emit("hello","world")
+// });
+
+// httpServer.listen(4000);
 
 // Mongoose connection
 const mongoose = require('mongoose');

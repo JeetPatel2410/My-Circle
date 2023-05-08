@@ -8,6 +8,7 @@ const otp = require("../models/users/otp")
 const passport = require("passport");
 var nodemailer = require('nodemailer');
 /* GET home page. */
+
 /**
  * If password forgoted
  * Enter email
@@ -18,7 +19,6 @@ router.get("/forgot", function (req, res) {
 
 // Generate OTP.
 router.post("/forgot", async function (req, res) {
-  // console.log(req.body,"herterererere");
   const OTP = otpGenerator.generate(5, {
     upperCaseAlphabets: true,
     specialChars: false,
@@ -55,6 +55,11 @@ router.post("/forgot", async function (req, res) {
     }
   });
 
+  const isEmailExists = await otp.exists({ email: req.body.email })
+  console.log(isEmailExists);
+  if (isEmailExists) {
+    await otp.deleteOne(isEmailExists);
+  }
   await otp.create({
     email: req.body.email,
     otp: OTP
