@@ -26,6 +26,7 @@ const uploadMulter = multer({ storage: storage, limits: { fileSize: maxSize } })
 // User Profile Updated
 router.put('/', /*upload.single('avatar'), */async function (req, res, next) {
   try {
+
     uploadMulter(req, res, async function (err) {
       if (err instanceof multer.MulterError) {
         // A Multer error occurred when uploading.
@@ -40,20 +41,32 @@ router.put('/', /*upload.single('avatar'), */async function (req, res, next) {
           message: err.message
         });
       } else {
+        console.log(req.file, "req.userrrr");
+
         const { fname, lname } = req.body
-        const obj = {
-          firstname: fname,
-          lastname: lname,
-          image: req.file.path
+        if (req.file == undefined) {
+          var obj = {
+            firstname: fname,
+            lastname: lname,
+            image: req.user.image
+          }
+          req.user.firstname = fname;
+          req.user.lastname = lname;
+        } else {
+          var obj = {
+            firstname: fname,
+            lastname: lname,
+            image: req.file.path
+          }
+          let text = req.file.path;
+          let result = text.replace("public", ".");
+          req.user.firstname = fname;
+          req.user.lastname = lname;
+          req.user.image = result;
         }
-
-        let text = req.file.path;
-        let result = text.replace("public", ".");
-        req.user.firstname = fname;
-        req.user.lastname = lname;
-        req.user.image = result;
-
         await user.updateOne({ _id: req.user._id }, obj);
+
+
         res.status(201).json({
           status: 201,
           message: "user Updated succsefully"

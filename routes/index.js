@@ -4,10 +4,10 @@ var router = express.Router();
 var md5 = require('md5');
 const user = require('../models/users/save');
 const post = require("../models/post/save")
+const otp = require("../models/users/otp")
 const passport = require("passport");
 var nodemailer = require('nodemailer');
 /* GET home page. */
-
 /**
  * If password forgoted
  * Enter email
@@ -17,12 +17,13 @@ router.get("/forgot", function (req, res) {
 })
 
 // Generate OTP.
-router.post("/forgot", function (req, res) {
+router.post("/forgot", async function (req, res) {
   // console.log(req.body,"herterererere");
   const OTP = otpGenerator.generate(5, {
     upperCaseAlphabets: true,
     specialChars: false,
   });
+
   var transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -34,9 +35,17 @@ router.post("/forgot", function (req, res) {
   var mailOptions = {
     from: 'pa3597230@gmail.com',
     to: req.body.email,
-    subject: 'Sending Email using Node.js',
+    subject: 'OTP',
     html: `<p>Your otp is <h2>${OTP}</h2></p>`
   };
+
+  const isRegisteruser = await user.exists({ email: req.body.email })
+  if (!isRegisteruser) {
+    return res.status(404).json({
+      status: 404,
+      message: "No user Found, Please register yourself !"
+    })
+  }
 
   transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
@@ -45,12 +54,51 @@ router.post("/forgot", function (req, res) {
       console.log('Email sent: ' + info.messageId);
     }
   });
-  res.render("partials/user/otp", { layout: 'login' })
-  // res.status(201).json({
-  //   status: 201,
-  //   message: "Otp generated SucessFully !"
-  // });  
 
+  await otp.create({
+    email: req.body.email,
+    otp: OTP
+  })
+  res.render("partials/user/otp", { layout: 'login', email: req.body.email })
+})
+
+// Verify otp
+router.post("/otp", async function (req, res, next) {
+  const isOtpExists = await otp.exists({ email: req.body.email })
+  if (!isOtpExists) {
+    return res.status(404).json({
+      statu: 400,
+      message: "Opps, Otp is expiredI"
+    })
+  }
+  const isMatch = await otp.exists({ email: req.body.email, otp: req.body.otp })
+  if (!isMatch) {
+    return res.status(404).json({
+      statu: 400,
+      message: "Opps, Otp Didn't match"
+    })
+  }
+  if (isMatch) {
+    res.render("partials/user/newPassword", { layout: "login", email: req.body.email })
+  }
+})
+
+// Set New password
+router.put("/password", async function (req, res) {
+  console.log(req.body, "new passwordddddi");
+  const update = await user.findOneAndUpdate(
+    {
+      email: req.body.email
+    },
+    {
+      password: md5(req.body.newPassword),
+      confirmpassword: md5(req.body.newPassword)
+    }
+  )
+  res.status(201).json({
+    status: 201,
+    message: "Password updated succesfully"
+  })
 })
 
 // Verify user

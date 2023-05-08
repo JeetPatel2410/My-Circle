@@ -115,7 +115,7 @@ $(document).ready(function () {
 
     $(".comment").unbind().click(function () {
         const id = $(this).attr('id');
-        console.log(id,"clicked");
+        console.log(id, "clicked");
         $.ajax({
             type: 'GET',
             url: `/post?id=${id}`,
@@ -147,6 +147,7 @@ $(document).ready(function () {
                 method: 'POST',
                 data: $form.serialize(),
                 success: function (response) {
+                    $("#comment-field").val("")
                     // alert(response.message)
                 },
                 error: function (err) {

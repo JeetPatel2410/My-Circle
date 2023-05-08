@@ -66,6 +66,65 @@ $(document).ready(function () {
                     $("#main-login").html(response)
                 },
                 error: function (err) {
+                    alert(err.responseJSON.message)
+                    window.location.href = "http://localhost:3000/registration"
+                }
+            })
+        }
+    })
+
+
+    $("#otp-password").validate({
+        rules: {
+            otpp: {
+                required: true
+            }
+        },
+        messages: {
+            otpp: {
+                required: "  Please enter Otp"
+            }
+        }, submitHandler: function (form) {
+            $form = $(form)
+            $.ajax({
+                type: "post",
+                url: "/otp",
+                data: $form.serialize(),
+                success: function (response) {
+                    // $("#email").val("")
+                    $("#main-login").html(response)
+                },
+                error: function (err) {
+                    alert(err.responseJSON.message)
+                    $("#otp").val('')
+                }
+            })
+        }
+    })
+
+    $("#create-new-password").validate({
+        rules: {
+            otp: {
+                required: true
+            }
+        },
+        messages: {
+            otp: {
+                required: "Please Enter Otp"
+            }
+        }, submitHandler: function (form) {
+            $form = $(form)
+            $.ajax({
+                type: "put",
+                url: "/password",
+                data: $form.serialize(),
+                success: function (response) {
+                    // $("#email").val("")
+                    alert(response.message)
+                    window.location.href = "http://localhost:3000/login"
+                    // $("#main-login").html(response)
+                },
+                error: function (err) {
 
                 }
             })

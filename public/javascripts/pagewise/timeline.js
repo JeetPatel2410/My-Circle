@@ -363,6 +363,7 @@ $(document).ready(function () {
         })
     })
 
+    // Home btn
     $("#homebtn").unbind().click(function () {
         $.ajax({
             url: `/timeline`,
