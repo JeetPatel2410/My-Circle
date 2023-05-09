@@ -2,10 +2,10 @@ var loadFile = function (event) {
     var output = document.getElementById('output');
     output.src = URL.createObjectURL(event.target.files[0]);
     output.onload = function () {
-
         URL.revokeObjectURL(output.src) // free memory
     }
 };
+
 count = 1;
 $(document).ready(function () {
 
@@ -334,11 +334,15 @@ $(document).ready(function () {
     //Like - btn
     $(".like-btn").unbind().dblclick(function () {
         const id = $(this).attr("id")
+        // socket.on("postlike", (arg) => {
+        //     alert(arg);
+        // })
         $.ajax({
             url: `/post/like?postId=${id}`,
             type: 'post',
             success: function (response) {
                 // alert(response.message)
+                // console.log(response);
                 window.location.reload();
             },
             error: function (err) {
@@ -379,8 +383,18 @@ $(document).ready(function () {
 
 })
 
+var socket = io("http://localhost:3000", {
+    query: {
+        userId: $("#user-id-hidden").val()
+    }
+});
 
-// const socket = io();
-// socket.on("hello",(arg)=>{
-//     console.log(arg);
-// })
+socket.on("hello", (arg) => {
+    console.log(arg);
+})
+
+
+// io.on("connection", function (socket) {
+//     conso    le.log("jffvifkvnlomfvfvofv");
+//     socket.to("someroom").emit("some event");
+// });

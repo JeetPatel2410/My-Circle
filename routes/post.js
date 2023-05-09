@@ -239,7 +239,14 @@ router.post('/save', async function (req, res, next) {
                 pipeline: [{
                     $match: {
                         $expr: {
-                            $eq: ["$_id", "$$id"]
+                            $and: [
+                                {
+                                    $eq: ["$_id", "$$id"]
+                                },
+                                {
+                                    $eq: ["$isArchiev", false]
+                                }
+                            ]
                         }
                     }
                 }],
@@ -335,6 +342,11 @@ router.post('/like', async function (req, res, next) {
             likeBy: req.user._id,
             postId: req.query.postId
         })
+    
+        
+        
+    // io.to(req.user._id).emit("postlike", "hello pogdfggdgst like");
+
     res.status(201).json({
         status: 201,
         message: "Post Liked succsefully"
