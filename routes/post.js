@@ -9,6 +9,7 @@ const savepost = require('../models/post/savepost');
 const comment = require('../models/post/comment');
 const likepost = require('../models/post/like');
 const save = require('../models/users/save');
+const likenotification = require('../models/post/likenotification');
 
 // Storage
 const maxSize = 1 * 1000 * 1000;
@@ -331,24 +332,38 @@ router.post('/like', async function (req, res, next) {
     const isExists = await likepost.exists({ likeBy: req.user._id, postId: req.query.postId })
     // const isExists = await likepost.aggregate([{ $match: { likeBy: req.user._id, postId: req.query.postId } }])
     if (isExists) {
-        res.status(201).json({
+        await likepost.deleteOne({ _id: isExists._id })
+        const likeCount = await likepost.countDocuments({ postId: req.query.postId })
+        console.log(likeCount, "likeeecountttt");
+
+        return res.status(201).json({
             status: 201,
+            likeCount: likeCount,
             message: "post Unliked"
         });
-        return await likepost.deleteOne({ _id: isExists._id })
     }
     await likepost.create(
         {
             likeBy: req.user._id,
             postId: req.query.postId
         })
-    
-        
-        
-    // io.to(req.user._id).emit("postlike", "hello pogdfggdgst like");
 
-    res.status(201).json({
-        status: 201,
+    const postBy = await post.findOne({ _id: req.query.postId })
+
+    const likeCount = await likepost.countDocuments({ postId: req.query.postId })
+    console.log(likeCount, "likeeecountttt");
+
+    await likenotification.create({
+        likeBy: req.user._id,
+        likeByName: `${req.user.firstname} ${req.user.lastname}`,
+        postBy: postBy.postBy
+    })
+
+    io.to(postBy.postBy.toString()).emit("postlike", `your post like by ${req.user.firstname}`);
+
+    res.status(202).json({
+        status: 202,
+        likeCount: likeCount,
         message: "Post Liked succsefully"
     });
 });

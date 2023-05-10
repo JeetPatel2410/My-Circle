@@ -2,7 +2,7 @@
   {{#each postData}}
 
   <div class="col-sm-6 col-lg-4">
-    <div class="like-btn card card-sm" id="{{_id}}">
+    <div class="card card-sm">
 
       <div class="card-body">
         <div class="d-flex flex-row">
@@ -25,7 +25,7 @@
           </div>
         </div>
       </div>
-      <a href="#" class="d-block"><img src="../uploads/{{imageId}}" class="card-img-top"
+      <a href="#" class="d-block"><img src="../uploads/{{imageId}}" class="like-btn card-img-top" id="{{_id}}"
           style="height: 424px;width:500px"></a>
       <h3 class="card-title" style="margin-left: 16px;margin-top:14px">{{title}}</h3>
       <p class="card-text" style="margin-left: 16px; margin-top:3px">{{description}}</p>
@@ -39,31 +39,36 @@
           <path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2"></path>
       </div> --}}
       {{#if savedatatatat}}
-      <div class="d-flex justify-content-end">
-        <svg xmlns="http://www.w3.org/2000/svg" class="unsavebtn icon icon-tabler icon-tabler-triangle-inverted-filled"
-          width="24" height="24" id="{{postBy}}" data-id="{{_id}}" viewBox="0 0 24 24" stroke-width="2"
-          stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"
-          style="margin-top: -74px;margin-right: 31px;">
+      <div class="d-flex justify-content-end" id="savebtn-{{_id}}">
+        <svg id="{{postBy}}" data-id="{{_id}}" xmlns="http://www.w3.org/2000/svg"
+          style="margin-top: -74px;margin-right: 31px;" class="unsavebtn icon icon-tabler icon-tabler-bookmark"
+          width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+          stroke-linecap="round" stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-          <path
-            d="M19.007 3a3 3 0 0 1 2.828 3.94l-.068 .185l-.062 .126l-7.09 12.233a3 3 0 0 1 -5.137 .19l-.103 -.173l-7.1 -12.25l-.061 -.125a3 3 0 0 1 2.625 -4.125l.058 -.001l.06 .002l.043 -.002h14.007z"
-            stroke-width="0" fill="currentColor"></path>
+          <path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2"></path>
         </svg>
       </div>
       {{else}}
-      <div class="d-flex justify-content-end">
-        <svg xmlns="http://www.w3.org/2000/svg" class="savebtn icon icon-tabler icon-tabler-bookmark " width="24"
+      <div class="d-flex justify-content-end" id="unsavebtn-{{_id}}">
+        <svg id="{{postBy}}" data-id="{{_id}}" style="margin-top: -74px;margin-right: 31px;"
+          xmlns="http://www.w3.org/2000/svg" class="savebtn icon icon-tabler icon-tabler-bookmark-off" width="24"
           height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-          stroke-linejoin="round" id="{{postBy}}" data-id="{{_id}}" style="margin-top: -74px;margin-right: 31px;">
+          stroke-linejoin="round">
           <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-          <path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2"></path>
+          <path d="M3 3l18 18"></path>
+          <path d="M17 17v3l-5 -3l-5 3v-13m1.178 -2.818c.252 -.113 .53 -.176 .822 -.176h6a2 2 0 0 1 2 2v7"></path>
+        </svg>
       </div>
+
+
+
+
       {{/if}}
-      <div class="d-flex justify-content-end">
+      <div class="d-flex justify-content-end" id="like-{{_id}}">
         <p style="margin-top: -73px;margin-right: 107px;">{{likedByCount}}</p>
       </div>
       {{#if like}}
-      <div class="d-flex justify-content-end">
+      <div class="{{_id}} d-flex justify-content-end">
         <svg xmlns="http://www.w3.org/2000/svg" class="liked-post icon icon-filled text-red" width="24" height="24"
           viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
           stroke-linejoin="round" style="margin-top: -74px;margin-right: 81px;" id="{{_id}}">
@@ -71,8 +76,8 @@
           <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"></path>
         </svg>
       </div>
-      {{else}} 
-      <div class="d-flex justify-content-end">
+      {{else}}
+      <div class="{{_id}} d-flex justify-content-end">
         <svg xmlns="http://www.w3.org/2000/svg" class="liked-post icon" width="24" height="24" viewBox="0 0 24 24"
           stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"
           style="margin-top: -74px;margin-right: 81px;" id="{{_id}}">
@@ -121,6 +126,7 @@
 
 </ul> --}}
 
-{{!-- <script src="javascripts/pagewise/timeline.js"></script> --}}
+{{!--
+<script src="javascripts/pagewise/timeline.js"></script> --}}
 
 <script src="javascripts/pagewise/post.js"></script>

@@ -4,6 +4,7 @@ const post = require("../models/post/save")
 const user = require('../models/users/save');
 const likepost = require('../models/post/like');
 const mongoose = require("mongoose");
+const likenotification = require('../models/post/likenotification');
 
 // TimeLine
 // router.get('/', async function (req, res, next) {
@@ -145,7 +146,7 @@ router.get('/', async function (req, res, next) {
     },
     {
         $unwind: "$data"
-    },{
+    }, {
         $lookup: {
             from: "like",
             localField: "_id",
@@ -157,23 +158,23 @@ router.get('/', async function (req, res, next) {
                     foreignField: "_id",
                     as: "details"
                 }
-            },{
+            }, {
                 $unwind: "$details"
-            },{
+            }, {
                 $group: {
                     _id: null,
                     likedBy: {
                         $push: {
-                            $concat: ['$details.firstname', " " ,'$details.lastname']
+                            $concat: ['$details.firstname', " ", '$details.lastname']
                         }
                     }
                 }
             }],
             as: "likedata"
         }
-    },{
+    }, {
         $unwind: {
-            path: "$likedata",           
+            path: "$likedata",
             preserveNullAndEmptyArrays: true
         }
     },
@@ -190,7 +191,7 @@ router.get('/', async function (req, res, next) {
             "createdOn": 1,
             "postBy": 1,
             "savedatatatat": 1,
-            "like":1,
+            "like": 1,
             "likedata": 1,
             "likedBy": "$likedata.likedBy",
             "likedByCount": {
@@ -234,7 +235,12 @@ router.get('/', async function (req, res, next) {
     for (let i = 1; i <= pageCount; i++) {
         pageArry.push(i);
     }
-    res.render('dashboard', { title: 'dashboard', postData: postData, logInUser: req.user, pageArry: pageArry, likedPostList: likedPostList[0] });
+
+    const countNotification = await likenotification.countDocuments({ isseen: false, postBy: req.user._id })
+    const notificationData = await likenotification.find({ isseen: false, postBy: req.user._id }).lean()
+    // console.log(notificationData, "notificationDatatatatta");
+    // console.log(countNotification, "notficationnnnnnnnn");
+    res.render('dashboard', { title: 'dashboard', postData: postData, logInUser: req.user, pageArry: pageArry, likedPostList: likedPostList[0], countNotification: countNotification, notificationData: notificationData });
 })
 // Post Filter,Search,Searching
 // router.get('/posts', async function (req, res, next) {
@@ -506,21 +512,21 @@ router.get('/posts', async function (req, res, next) {
                     foreignField: "_id",
                     as: "details"
                 }
-            },{
+            }, {
                 $unwind: "$details"
-            },{
+            }, {
                 $group: {
                     _id: null,
                     likedBy: {
                         $push: {
-                            $concat: ['$details.firstname', " " ,'$details.lastname']
+                            $concat: ['$details.firstname', " ", '$details.lastname']
                         }
                     }
                 }
             }],
             as: "likedata"
         }
-    },{
+    }, {
         $unwind: {
             path: "$likedata",
             preserveNullAndEmptyArrays: true
@@ -539,7 +545,7 @@ router.get('/posts', async function (req, res, next) {
             "createdOn": 1,
             "postBy": 1,
             "savedatatatat": 1,
-            "like":1,
+            "like": 1,
             "likedata": 1,
             "likedBy": "$likedata.likedBy",
             "likedByCount": {

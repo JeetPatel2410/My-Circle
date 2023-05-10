@@ -9,6 +9,23 @@ var loadFile = function (event) {
 count = 1;
 $(document).ready(function () {
 
+    toastr.options = {
+        'closeButton': true,
+        'debug': false,
+        'newestOnTop': false,
+        'progressBar': false,
+        'positionClass': 'toast-top-right',
+        'preventDuplicates': false,
+        'showDuration': '1000',
+        'hideDuration': '1000',
+        'timeOut': '5000',
+        'extendedTimeOut': '1000',
+        'showEasing': 'swing',
+        'hideEasing': 'linear',
+        'showMethod': 'fadeIn',
+        'hideMethod': 'fadeOut',
+    }
+
     // Function() Create Coman URL
     function geturl() {
         let url = "/timeline/posts"
@@ -32,7 +49,39 @@ $(document).ready(function () {
     }
 
     // Save Post
-    $(".savebtn").unbind().click(function () {
+    $('body').on("click", ".savebtn", function () {
+        console.log("clicked");
+        const id = $(this).attr('id');
+        const postId = $(this).attr('data-id');
+        console.log(id, "id");
+        console.log(postId, "postid");
+        $.ajax({
+            type: 'PUT',
+            url: `/post/${id}/${postId}`,
+            success: function (response) {
+                alert(response.message)
+                // window.location.reload();
+                $(`#unsavebtn-${postId}`).replaceWith(`<div class="d-flex justify-content-end" id=savebtn-${postId}>
+            <svg id=${id} data-id=${postId} xmlns="http://www.w3.org/2000/svg"
+              style="margin-top: -74px;margin-right: 31px;" class="unsavebtn icon icon-tabler icon-tabler-bookmark"
+              width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2"></path>
+            </svg>
+          </div>`)
+
+            },
+            error: function (err) {
+                alert(err.responseJSON.message)
+            }
+        })
+    })
+
+
+    // Unsave Button
+    $('body').on("click", ".unsavebtn", function () {
+        console.log("clicked");
         const id = $(this).attr('id');
         const postId = $(this).attr('data-id');
         $.ajax({
@@ -40,13 +89,24 @@ $(document).ready(function () {
             url: `/post/${id}/${postId}`,
             success: function (response) {
                 alert(response.message)
-                window.location.reload();
+                // window.location.reload();
+                $(`#savebtn-${postId}`).replaceWith(`<div class="d-flex justify-content-end" id=unsavebtn-${postId}>
+                <svg id=${id} data-id=${postId} style="margin-top: -74px;margin-right: 31px;"
+                  xmlns="http://www.w3.org/2000/svg" class="savebtn icon icon-tabler icon-tabler-bookmark-off" width="24"
+                  height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                  stroke-linejoin="round">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                  <path d="M3 3l18 18"></path>
+                  <path d="M17 17v3l-5 -3l-5 3v-13m1.178 -2.818c.252 -.113 .53 -.176 .822 -.176h6a2 2 0 0 1 2 2v7"></path>
+                </svg>
+              </div>`)
             },
             error: function (err) {
                 alert(err.responseJSON.message)
             }
         })
     })
+
 
     // Edit Profile
     $("#user-update-form").validate({
@@ -170,23 +230,7 @@ $(document).ready(function () {
         })
     })
 
-    // Unsave Button
-    $(".unsavebtn").unbind().click(function () {
-        console.log("clicked");
-        const id = $(this).attr('id');
-        const postId = $(this).attr('data-id');
-        $.ajax({
-            type: 'PUT',
-            url: `/post/${id}/${postId}`,
-            success: function (response) {
-                alert(response.message)
-                window.location.reload();
-            },
-            error: function (err) {
-                alert(err.responseJSON.message)
-            }
-        })
-    })
+
 
     //Show Users
     $("#all-users").unbind().click(function () {
@@ -334,16 +378,40 @@ $(document).ready(function () {
     //Like - btn
     $(".like-btn").unbind().dblclick(function () {
         const id = $(this).attr("id")
-        // socket.on("postlike", (arg) => {
-        //     alert(arg);
-        // })
+        toastr.success("post edited successfully")
         $.ajax({
             url: `/post/like?postId=${id}`,
             type: 'post',
             success: function (response) {
                 // alert(response.message)
                 // console.log(response);
-                window.location.reload();
+                // console.log(response.status);
+
+                if (response.status == 202) {
+                    $(`.${id}`).replaceWith(`<div class="${id} d-flex justify-content-end">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="liked-post icon icon-filled text-red" width="24" height="24"
+                    viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                    stroke-linejoin="round" style="margin-top: -74px;margin-right: 81px;" id="{{_id}}">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"></path>
+                    </svg>
+                    </div>`)
+                }
+                if (response.status == 201) {
+                    $(`.${id}`).replaceWith(`<div class="${id} d-flex justify-content-end">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="liked-post icon" width="24" height="24" viewBox="0 0 24 24"
+                      stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"
+                      style="margin-top: -74px;margin-right: 81px;" id="{{_id}}">
+                      <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                      <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"></path>
+                    </svg>
+                  </div>`)
+
+                }
+                $(`#like-${id}`).replaceWith(`<div class="d-flex justify-content-end" id="like-${id}">
+                <p style="margin-top: -73px;margin-right: 107px;">${response.likeCount}</p>
+              </div>`)
+                // window.location.reload();
             },
             error: function (err) {
                 alert(err.responseJSON.message)
@@ -398,3 +466,7 @@ socket.on("hello", (arg) => {
 //     conso    le.log("jffvifkvnlomfvfvofv");
 //     socket.to("someroom").emit("some event");
 // });
+
+socket.on("postlike", (arg) => {
+    // alert(arg);
+})
