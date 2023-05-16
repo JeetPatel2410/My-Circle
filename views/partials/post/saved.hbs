@@ -31,24 +31,28 @@
             <p class="card-text" style="margin-left: 16px; margin-top:3px">{{this.dataa.description}}</p>
             <p style="margin-left: 17px;">{{formatdate createdOn}}</p>
 
-            <div class="d-flex justify-content-end">
-                {{!-- <svg xmlns="http://www.w3.org/2000/svg" class="unsavebtn icon icon-tabler icon-tabler-bookmark "
-                    width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                    stroke-linecap="round" stroke-linejoin="round" id="{{postBy}}" data-id="{{_id}}"
+            <div class="d-flex justify-content-end" id=savebtn-${postId}>
+                <svg id="{{this.dataa.postBy}}" data-id="{{this.dataa._id}}" xmlns="http://www.w3.org/2000/svg"
+                    style="margin-top: -74px;margin-right: 31px;"
+                    class="unsavebtn icon icon-tabler icon-tabler-bookmark" width="24" height="24" viewBox="0 0 24 24"
+                    stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                    <path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2"></path>
+                </svg>
+            </div>
+            {{!-- <div class="d-flex justify-content-end">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="unsavebtn icon icon-tabler icon-tabler-triangle-inverted-filled" width="24" height="24"
+                    id="{{this.dataa.postBy}}" data-id="{{this.dataa._id}}" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"
                     style="margin-top: -74px;margin-right: 31px;">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                    <path d="M9 4h6a2 2 0 0 1 2 2v14l-5 -3l-5 3v-14a2 2 0 0 1 2 -2"></path> --}}
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                        class="unsavebtn icon icon-tabler icon-tabler-triangle-inverted-filled" width="24" height="24"
-                        id="{{this.dataa.postBy}}" data-id="{{this.dataa._id}}" viewBox="0 0 24 24" stroke-width="2"
-                        stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"
-                        style="margin-top: -74px;margin-right: 31px;">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                        <path
-                            d="M19.007 3a3 3 0 0 1 2.828 3.94l-.068 .185l-.062 .126l-7.09 12.233a3 3 0 0 1 -5.137 .19l-.103 -.173l-7.1 -12.25l-.061 -.125a3 3 0 0 1 2.625 -4.125l.058 -.001l.06 .002l.043 -.002h14.007z"
-                            stroke-width="0" fill="currentColor"></path>
-                    </svg>
-            </div>
+                    <path
+                        d="M19.007 3a3 3 0 0 1 2.828 3.94l-.068 .185l-.062 .126l-7.09 12.233a3 3 0 0 1 -5.137 .19l-.103 -.173l-7.1 -12.25l-.061 -.125a3 3 0 0 1 2.625 -4.125l.058 -.001l.06 .002l.043 -.002h14.007z"
+                        stroke-width="0" fill="currentColor"></path>
+                </svg>
+            </div> --}}
 
         </div><br>
     </div>

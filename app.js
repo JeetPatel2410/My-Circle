@@ -33,8 +33,8 @@ require('custom-env').env()
 var router = express.Router();
 async function main() {
   try {
-    await mongoose.connect(`mongodb://127.0.0.1:27017/social-media`)
-    // await mongoose.connect(`mongodb://${process.env.user}:${process.env.pass}@127.0.0.1:${process.env.port}/${process.env.dbName}?authSource=admin`)
+    // await mongoose.connect(`mongodb://127.0.0.1:27017/social-media`)
+    await mongoose.connect(`mongodb://${process.env.user}:${process.env.pass}@127.0.0.1:${process.env.port}/${process.env.dbName}?authSource=admin`)
     console.log("=========Mongoose Connected===========");
   } catch (error) {
     console.log(error);

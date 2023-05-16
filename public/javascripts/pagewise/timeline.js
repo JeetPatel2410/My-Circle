@@ -1,3 +1,6 @@
+// const { response } = require("express");
+// const { success } = require("toastr");
+
 var loadFile = function (event) {
     var output = document.getElementById('output');
     output.src = URL.createObjectURL(event.target.files[0]);
@@ -459,11 +462,11 @@ $(document).ready(function () {
     })
 
     //Notification 
-    $(".notification").click(function(){
+    $(".notification").click(function () {
         const id = $(this).attr("id");
         $(`#${id}`).remove()
-        console.log($(this).attr("id"),"Notification Clicked");  
-        
+        console.log($(this).attr("id"), "Notification Clicked");
+
         $.ajax({
             url: `/user/notification?notifcation=${id}`,
             type: 'get',
@@ -472,6 +475,27 @@ $(document).ready(function () {
             },
             error: function (err) {
                 alert(err.responseJSON.message)
+            }
+        })
+    })
+
+    //Chat
+
+
+    $("#chat").click(function () {
+        // $("#chat").modal("show");
+        // $("#newModal").modal("show");
+        console.log("chat clickedd");
+        $.ajax({
+            url: "/user/chat",
+            type: "get",
+            success: function (response) {
+                // console.log(response);
+                $('#posts').html(response)
+
+            },
+            error: function (err) {
+                console.log(err);
             }
         })
     })
@@ -506,5 +530,8 @@ socket.on("postdislike", (arg) => {
     // alert(arg);
     const previousNotificationCount = parseInt($(".countNotification").text() || 0);
     $(".countNotification").text(previousNotificationCount - 1);
+    if (previousNotificationCount == 0) {
+        $(".countNotification").text(0);
+    }
     // toastr.success(arg)
 })

@@ -60,7 +60,8 @@ $(document).ready(function () {
                 processData: false,
                 // body: formData,
                 success: function (response) {
-                    // alert(response.message)
+                    // alert(response.message);
+                    // $("#edit-post").modal('hide');
                     window.location.reload();
                 },
                 error: function (err) {
@@ -107,7 +108,7 @@ $(document).ready(function () {
                 processData: false,
                 // body: formData,
                 success: function (response) {
-                    
+
                     window.location.reload();
                 },
                 error: function (err) {

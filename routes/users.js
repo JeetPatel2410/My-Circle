@@ -268,11 +268,23 @@ router.get('/search', async function (req, res, next) {
 
 router.get("/notification", async function (req, res) {
   console.log("in notificationnnnnnn");
-  await likenotification.findByIdAndUpdate(req.query.notifcation,{isseen:true})
+  await likenotification.findByIdAndUpdate(req.query.notifcation, { isseen: true })
+
+  const notifcationData = await likenotification.findById(req.query.notifcation);
+  console.log(notifcationData);
+  io.to(notifcationData.postBy.toString()).emit("postdislike", `your post Dislike`);
+
   res.status(201).json({
     status: 201,
     message: "Notification Removed"
   });
+})
+
+router.get("/chat", async function (req, res) {
+  const userDetails = await user.find({}).lean();
+  // console.log(userDetails);
+
+  res.render("partials/user/chat", { layout: "blank", userDetails: userDetails })
 })
 
 
