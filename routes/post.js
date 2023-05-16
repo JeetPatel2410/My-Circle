@@ -35,22 +35,41 @@ const storage = multer.diskStorage({
 })
 
 var upload = multer({ storage: storage, limits: { fileSize: maxSize } })
-
+const uploadMulter = multer({ storage: storage, limits: { fileSize: maxSize } }).single('postavatar')
 // Create Post
-router.post('/', upload.single('postavatar'), async function (req, res, next) {
-    const id = new mongoose.Types.ObjectId(req.user._id)
-    const { title, description } = req.body
-    const userPostData = {
-        postBy: id,
-        title: title,
-        description: description,
-        imageId: req.file.filename
-    }
-    await post.create(userPostData)
-    res.status(201).json({
-        status: 201,
-        message: "Post Created succsefully"
-    });
+router.post('/', async function (req, res, next) {
+
+    uploadMulter(req, res, async function (err) {
+        if (err instanceof multer.MulterError) {
+            // A Multer error occurred when uploading.
+            return res.status(403).json({
+                status: 403,
+                message: err.message
+            });
+        } else if (err) {
+            // An unknown error occurred when uploading.
+            return res.status(403).json({
+                status: 403,
+                message: err.message
+            });
+        } else {
+            const id = new mongoose.Types.ObjectId(req.user._id)
+            const { title, description } = req.body
+            const userPostData = {
+                postBy: id,
+                title: title,
+                description: description,
+                imageId: req.file.filename
+            }
+            await post.create(userPostData)
+            res.status(201).json({
+                status: 201,
+                message: "Post Created succsefully"
+            });
+        }
+    })
+
+
 });
 
 // Give data to modal
@@ -128,7 +147,23 @@ router.put('/:id/:postId', upload.single('editavatar'), async function (req, res
     // Edit post
     if (req.body.title) {
         const id = new mongoose.Types.ObjectId(req.body.hiddenval);
+        var editPostImagePath = await post.findById(id)
+        console.log(editPostImagePath, "editPostImagePatheditPostImagePatheditPostImagePath");
         // console.log(id);
+        if (!req.file) {
+            await post.updateOne({ _id: id }, {
+                $set:
+                {
+                    title: req.body.title,
+                    description: req.body.description,
+                    imageId: editPostImagePath.imageId
+                }
+            })
+            return res.status(201).json({
+                status: 201,
+                message: "post Updated Succesfully"
+            });
+        }
         await post.updateOne({ _id: id }, {
             $set:
             {
@@ -151,8 +186,8 @@ router.put('/:id/:postId', upload.single('editavatar'), async function (req, res
     const postByUserId = new mongoose.Types.ObjectId(req.params.id);
     const postId = new mongoose.Types.ObjectId(req.params.postId);
     if (req.user._id === req.params.id) {
-        return res.status(201).json({
-            status: 201,
+        return res.status(203).json({
+            status: 203,
             message: "you Can't save this post "
         });
     }
@@ -331,11 +366,18 @@ router.post('/save', async function (req, res, next) {
 router.post('/like', async function (req, res, next) {
     const isExists = await likepost.exists({ likeBy: req.user._id, postId: req.query.postId })
     // const isExists = await likepost.aggregate([{ $match: { likeBy: req.user._id, postId: req.query.postId } }])
+    var postBy = await post.findOne({ _id: req.query.postId })
     if (isExists) {
         await likepost.deleteOne({ _id: isExists._id })
         const likeCount = await likepost.countDocuments({ postId: req.query.postId })
         console.log(likeCount, "likeeecountttt");
+        const isNotificationExists = await likenotification.exists({ postId: req.query.postId, likeBy: req.user._id })
+        if (isNotificationExists) {
+            await likenotification.deleteOne({ _id: isNotificationExists._id });
+        }
+        io.to(postBy.postBy.toString()).emit("postdislike", `your post Dislike`);
 
+        // console.log(isNotificationExists, "isNotificationExistsisNotificationExists");
         return res.status(201).json({
             status: 201,
             likeCount: likeCount,
@@ -348,15 +390,14 @@ router.post('/like', async function (req, res, next) {
             postId: req.query.postId
         })
 
-    const postBy = await post.findOne({ _id: req.query.postId })
-
     const likeCount = await likepost.countDocuments({ postId: req.query.postId })
     console.log(likeCount, "likeeecountttt");
 
     await likenotification.create({
         likeBy: req.user._id,
         likeByName: `${req.user.firstname} ${req.user.lastname}`,
-        postBy: postBy.postBy
+        postBy: postBy.postBy,
+        postId: req.query.postId
     })
 
     io.to(postBy.postBy.toString()).emit("postlike", `your post like by ${req.user.firstname}`);
@@ -378,11 +419,47 @@ router.post('/comment', async function (req, res, next) {
             commentBy: commentBy,
             postId: postId
         }
-        await comment.create(commentObj)
-        res.status(201).json({
-            status: 201,
-            message: "Comment"
-        });
+        await comment.create(commentObj);
+        const data = await comment.aggregate([
+            {
+                $match: {
+                    postId: new mongoose.Types.ObjectId(req.body.hiddenval)
+                }
+            },
+            {
+                $sort: { createdOn: -1 }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'commentBy',
+                    foreignField: '_id',
+                    pipeline: [{
+                        $project: {
+                            firstname: 1,
+                            lastname: 1,
+                            image: 1
+                        }
+                    }],
+                    as: 'commentUser'
+                }
+            },
+            {
+                $unwind: "$commentUser"
+            },
+            {
+                $project: {
+                    comment: 1,
+                    createdOn: 1,
+                    commentUser: '$commentUser'
+                }
+            }
+        ])
+        res.render('partials/post/commentList', { data: data, layout: 'blank' })
+        // res.status(201).json({
+        //     status: 201,
+        //     message: "Comment"
+        // });
     } catch (error) {
 
     }

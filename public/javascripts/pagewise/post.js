@@ -107,6 +107,7 @@ $(document).ready(function () {
                 processData: false,
                 // body: formData,
                 success: function (response) {
+                    
                     window.location.reload();
                 },
                 error: function (err) {
@@ -167,6 +168,7 @@ $(document).ready(function () {
                 data: $form.serialize(),
                 success: function (response) {
                     $("#comment-field").val("")
+                    $('#commentBody').html(response)
                     // alert(response.message)
                 },
                 error: function (err) {

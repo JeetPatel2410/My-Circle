@@ -44,7 +44,7 @@ router.put('/', /*upload.single('avatar'), */async function (req, res, next) {
         console.log(req.file, "req.userrrr");
 
         const { fname, lname } = req.body
-        if (req.file == undefined) {
+        if (!req.file) {
           var obj = {
             firstname: fname,
             lastname: lname,

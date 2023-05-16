@@ -27,23 +27,6 @@ const statistics = require("./models/statistics");
 
 var app = express();
 
-
-//Socket
-
-// socket
-// const { createServer } = require("http");
-// const { Server } = require("socket.io");
-
-// const httpServer = createServer(app);
-// const io = new Server(httpServer, { /* options */ });
-
-// io.on("connection", (socket) => {
-//   // ...
-//   socket.emit("hello","world")
-// });
-
-// httpServer.listen(4000);
-
 // Mongoose connection
 const mongoose = require('mongoose');
 require('custom-env').env()
@@ -72,8 +55,13 @@ const hbs = exphbs.create({
     },
     // Date Formation To show Date in good Formate
     formatdate: function (date) {
-      // return moment(date).format("MMMM Do YYYY, h:mm:ss a")
-      return moment(date).fromNow();
+      const isOneDayAgo = moment(date).isBefore(moment().subtract(1, 'd'));
+      if (!isOneDayAgo) {
+        return moment(date).fromNow();
+      }
+      
+      return moment(date).format("MMMM Do YYYY, h:mm:ss a")
+
     },
     /**
      * Edit And Archiev Button Match.

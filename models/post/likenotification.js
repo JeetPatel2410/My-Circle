@@ -16,6 +16,10 @@ const likeNotificationSchema = new mongoose.Schema({           //likeNotificatio
         type: mongoose.Schema.Types.ObjectId,
         ref: "posts"
     },
+    postId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "posts"
+    },
     likeByName: {
         type: String,
         required: true
