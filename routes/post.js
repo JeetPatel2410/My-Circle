@@ -38,6 +38,7 @@ var upload = multer({ storage: storage, limits: { fileSize: maxSize } })
 
 // Create Post
 router.post('/', upload.single('postavatar'), async function (req, res, next) {
+    
     const id = new mongoose.Types.ObjectId(req.user._id)
     const { title, description } = req.body
     const userPostData = {
@@ -379,10 +380,47 @@ router.post('/comment', async function (req, res, next) {
             postId: postId
         }
         await comment.create(commentObj)
-        res.status(201).json({
-            status: 201,
-            message: "Comment"
-        });
+
+        const data = await comment.aggregate([
+            {
+                $match: {
+                    postId: new mongoose.Types.ObjectId(req.body.hiddenval)
+                }
+            },
+            {
+                $sort: { createdOn: -1 }
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'commentBy',
+                    foreignField: '_id',
+                    pipeline: [{
+                        $project: {
+                            firstname: 1,
+                            lastname: 1,
+                            image: 1
+                        }
+                    }],
+                    as: 'commentUser'
+                }
+            },
+            {
+                $unwind: "$commentUser"
+            },
+            {
+                $project: {
+                    comment: 1,
+                    createdOn: 1,
+                    commentUser: '$commentUser'
+                }
+            }
+        ])
+        res.render('partials/post/commentList', { data: data, layout: 'blank' })
+        // res.status(201).json({
+        //     status: 201,
+        //     message: "Comment"
+        // });
     } catch (error) {
 
     }

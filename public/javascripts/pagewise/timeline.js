@@ -449,6 +449,24 @@ $(document).ready(function () {
         })
     })
 
+    //Notification 
+    $(".notification").click(function(){
+        const id = $(this).attr("id");
+        $(`#${id}`).remove()
+        console.log($(this).attr("id"),"Notification Clicked");  
+        
+        $.ajax({
+            url: `/user/notification?notifcation=${id}`,
+            type: 'get',
+            success: function (response) {
+                // $('#main-page').html(response)
+            },
+            error: function (err) {
+                alert(err.responseJSON.message)
+            }
+        })
+    })
+
 })
 
 var socket = io("http://localhost:3000", {

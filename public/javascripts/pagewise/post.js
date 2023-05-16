@@ -148,6 +148,9 @@ $(document).ready(function () {
         })
     })
 
+    $("#post-comment-form").submit(function (e) {
+        e.preventDefault();
+    })
 
     $("#post-comment-form").validate({
         rules: {
@@ -167,6 +170,7 @@ $(document).ready(function () {
                 data: $form.serialize(),
                 success: function (response) {
                     $("#comment-field").val("")
+                    $('#commentBody').html(response)
                     // alert(response.message)
                 },
                 error: function (err) {

@@ -3,6 +3,9 @@ var router = express.Router();
 const multer = require('multer')
 const path = require("path")
 const user = require('../models/users/save');
+const likenotification = require('../models/post/likenotification');
+
+
 const { log } = require('console');
 var maxSize = 1 * 1000 * 1000;
 const storage = multer.diskStorage({
@@ -263,7 +266,14 @@ router.get('/search', async function (req, res, next) {
   }
 });
 
-
+router.get("/notification", async function (req, res) {
+  console.log("in notificationnnnnnn");
+  await likenotification.findByIdAndUpdate(req.query.notifcation,{isseen:true})
+  res.status(201).json({
+    status: 201,
+    message: "Notification Removed"
+  });
+})
 
 
 module.exports = router;
