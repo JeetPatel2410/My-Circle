@@ -6,24 +6,24 @@ var loadFile = function (event) {
     }
 };
 
-count = 1;
+// count = 1;
 $(document).ready(function () {
 
     toastr.options = {
-        'closeButton': true,
-        'debug': false,
-        'newestOnTop': false,
-        'progressBar': false,
-        'positionClass': 'toast-top-right',
-        'preventDuplicates': false,
-        'showDuration': '1000',
-        'hideDuration': '1000',
-        'timeOut': '5000',
-        'extendedTimeOut': '1000',
-        'showEasing': 'swing',
-        'hideEasing': 'linear',
-        'showMethod': 'fadeIn',
-        'hideMethod': 'fadeOut',
+        "closeButton": true,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
     }
 
     // Function() Create Coman URL
@@ -71,6 +71,18 @@ $(document).ready(function () {
             </svg>
           </div>`)
 
+                if (response.status == 203) {
+                    $(`#savebtn-${postId}`).replaceWith(`<div class="d-flex justify-content-end" id=unsavebtn-${postId}>
+        <svg id=${id} data-id=${postId} style="margin-top: -74px;margin-right: 31px;"
+          xmlns="http://www.w3.org/2000/svg" class="savebtn icon icon-tabler icon-tabler-bookmark-off" width="24"
+          height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+          <path d="M3 3l18 18"></path>
+          <path d="M17 17v3l-5 -3l-5 3v-13m1.178 -2.818c.252 -.113 .53 -.176 .822 -.176h6a2 2 0 0 1 2 2v7"></path>
+        </svg>
+      </div>`)
+                }
             },
             error: function (err) {
                 alert(err.responseJSON.message)
@@ -378,7 +390,6 @@ $(document).ready(function () {
     //Like - btn
     $(".like-btn").unbind().dblclick(function () {
         const id = $(this).attr("id")
-        toastr.success("post edited successfully")
         $.ajax({
             url: `/post/like?postId=${id}`,
             type: 'post',
@@ -386,7 +397,6 @@ $(document).ready(function () {
                 // alert(response.message)
                 // console.log(response);
                 // console.log(response.status);
-
                 if (response.status == 202) {
                     $(`.${id}`).replaceWith(`<div class="${id} d-flex justify-content-end">
                     <svg xmlns="http://www.w3.org/2000/svg" class="liked-post icon icon-filled text-red" width="24" height="24"
@@ -406,7 +416,6 @@ $(document).ready(function () {
                       <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"></path>
                     </svg>
                   </div>`)
-
                 }
                 $(`#like-${id}`).replaceWith(`<div class="d-flex justify-content-end" id="like-${id}">
                 <p style="margin-top: -73px;margin-right: 107px;">${response.likeCount}</p>
@@ -487,4 +496,15 @@ socket.on("hello", (arg) => {
 
 socket.on("postlike", (arg) => {
     // alert(arg);
+    const previousNotificationCount = parseInt($(".countNotification").text() || 0);
+    $(".countNotification").text(previousNotificationCount + 1);
+    toastr.success(arg)
+})
+
+
+socket.on("postdislike", (arg) => {
+    // alert(arg);
+    const previousNotificationCount = parseInt($(".countNotification").text() || 0);
+    $(".countNotification").text(previousNotificationCount - 1);
+    // toastr.success(arg)
 })

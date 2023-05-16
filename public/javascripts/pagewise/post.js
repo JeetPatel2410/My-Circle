@@ -107,6 +107,7 @@ $(document).ready(function () {
                 processData: false,
                 // body: formData,
                 success: function (response) {
+                    
                     window.location.reload();
                 },
                 error: function (err) {
