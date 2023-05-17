@@ -13,12 +13,14 @@ const localStrategy = require("passport-local").Strategy;
 const user = require('./models/users/save');
 const moment = require("moment")
 var CronJob = require('cron').CronJob;
+var helpers = require('handlebars-helpers')();
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var timelineRouter = require('./routes/timeline');
 var postRouter = require('./routes/post');
 var reportRouter = require('./routes/report');
+const chatRouter = require("./routes/chat");
 const savePost = require("./models/post/savepost");
 const likePost = require("./models/post/like");
 const post = require("./models/post/save");
@@ -48,6 +50,7 @@ const hbs = exphbs.create({
   defaultLayout: 'main',
   extname: '.hbs',
   helpers: {
+    ...helpers,
     section: function (name, options) {
       if (!this._sections) this._sections = {};
       this._sections[name] = options.fn(this);
@@ -59,7 +62,7 @@ const hbs = exphbs.create({
       if (!isOneDayAgo) {
         return moment(date).fromNow();
       }
-      
+
       return moment(date).format("MMMM Do YYYY, h:mm:ss a")
 
     },
@@ -218,6 +221,8 @@ app.use('/timeline', timelineRouter)
 app.use('/user', usersRouter);
 app.use('/post', postRouter);
 app.use('/report', reportRouter);
+app.use('/chat', chatRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

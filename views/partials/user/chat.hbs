@@ -1,48 +1,22 @@
-<div class="modal modal-blur fade show" id="user-chat" tabindex="-1" style="display: block;" aria-modal="true"
-    role="dialog">
-    <div class="modal-dialog modal-full-width modal-dialog-centered" role="document">
-        <div class="modal-content">
-
-            <div class="modal-body d-flex">
-                <div class="card">
-                    {{#each userDetails}}
-                    <div class="row row-0">
-                        <div class="col-3">
-                            <!-- Photo -->
-                            <img src="{{image}}" style="height: 100px;width:736px;" class="object-cover card-img-start"
-                                alt="Beautiful blonde woman relaxing with a can of coke on a tree stump by the beach">
-                        </div>
-                        <div class="col-9">
-                            <div class="card-body">
-                                <h3 class="card-title">{{firstname}} {{lastname}}</h3>
-                            </div>
-                        </div>
-                    </div><br>
-                    {{/each}}
-                </div>
-
-                <div class="card" style="height: 600px;">
-                    <div class="row">
-                        <div class="col">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci animi beatae delectus
-                            deleniti
-                            dolorem eveniet facere fuga iste nemo nesciunt nihil odio perspiciatis, quia quis
-                            reprehenderit sit
-                            tempora totam unde. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci animi
-                            beatae
-                            delectus deleniti
-                            dolorem eveniet facere fuga iste nemo nesciunt nihil odio perspiciatis, quia quis
-                            reprehenderit sit
-                            tempora totam unde. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci animi
-                            beatae
-                            delectus deleniti
-                            dolorem eveniet fac
-                        </div>
-                    </div>
-                </div>
-
+<div class="container d-flex">
+    <div class="card" style="width:300px;">
+        {{#each userDetails}}
+        <div class="row row-0">
+            <div class="col-3">
+                <!-- Photo -->
+                <img src="{{image}}" style="height: 100px;width:736px;" class="object-cover card-img-start">
             </div>
-
-        </div>
+            <div class="spec-user col-9" id={{_id}}>
+                <div class="card-body">
+                    <h3 class="card-title">{{firstname}} {{lastname}}</h3>
+                </div>
+            </div>
+        </div><br>
+        {{/each}}
+    </div>
+    <div class="card" style="height: 600px;width:1300px;" id="chat-box">
     </div>
 </div>
+{{!-- <input type="hidden" id="user-id-hidden" name="hiddenval" value="{{logInUser._id}}"> --}}
+
+<script src="javascripts/pagewise/chat.js"></script>

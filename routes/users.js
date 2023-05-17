@@ -280,12 +280,9 @@ router.get("/notification", async function (req, res) {
   });
 })
 
-router.get("/chat", async function (req, res) {
-  const userDetails = await user.find({}).lean();
-  // console.log(userDetails);
-
-  res.render("partials/user/chat", { layout: "blank", userDetails: userDetails })
-})
+// router.get("/chat", async function (req, res) {
+  
+// })
 
 
 module.exports = router;

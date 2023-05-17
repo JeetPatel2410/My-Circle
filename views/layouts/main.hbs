@@ -69,7 +69,7 @@
   <div class="page" id="main-page">
     <!-- Navbar -->
     <div class="sticky-top">
-
+      {{!-- {{log this.logInUser "globalmainthis"}} --}}
       <header class="navbar navbar-expand-md navbar-light sticky-top d-print-none">
         <div class="container-xl">
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu"
@@ -324,8 +324,7 @@
                   <p style="margin-top: 17px; margin-left:25px" id="report">Report</p>
                 </li>
                 <li>
-                  <p style="margin-top: 17px; margin-left:25px" id="chat" data-bs-toggle="modal"
-                          data-bs-target="#user-chat">Chat</p>
+                  <p style="margin-top: 17px; margin-left:25px" id="chat">Chat</p>
                 </li>
 
                 {{!-- <li class="nav-item active dropdown">
@@ -523,7 +522,14 @@
     integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
     crossorigin="anonymous"></script>
 </body>
-
+<script>
+  {{log this.logInUser "globalmainthis"}}
+  var socket = io({
+    query: {
+        userId: {{logInUser._id}}
+    }
+});
+</script>
 
 <script src="javascripts/pagewise/timeline.js"></script>
 

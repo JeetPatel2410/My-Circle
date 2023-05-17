@@ -222,7 +222,7 @@ $(document).ready(function () {
             type: 'get',
             success: function (response) {
 
-                window.location.href = 'http://localhost:3000'
+                window.location.href = '/'
             },
             error: function (err) {
                 alert(err.responseJSON.message)
@@ -449,16 +449,17 @@ $(document).ready(function () {
 
     // Home btn
     $("#homebtn").unbind().click(function () {
-        $.ajax({
-            url: `/timeline`,
-            type: 'get',
-            success: function (response) {
-                $('#main-page').html(response)
-            },
-            error: function (err) {
-                alert(err.responseJSON.message)
-            }
-        })
+        window.location.href = '/timeline'
+        // $.ajax({
+        //     url: `/timeline`,
+        //     type: 'get',
+        //     success: function (response) {
+        //         $('#main-page').html(response)
+        //     },
+        //     error: function (err) {
+        //         alert(err.responseJSON.message)
+        //     }
+        // })
     })
 
     //Notification 
@@ -483,30 +484,21 @@ $(document).ready(function () {
 
 
     $("#chat").click(function () {
-        // $("#chat").modal("show");
-        // $("#newModal").modal("show");
-        console.log("chat clickedd");
-        $.ajax({
-            url: "/user/chat",
-            type: "get",
-            success: function (response) {
-                // console.log(response);
-                $('#posts').html(response)
-
-            },
-            error: function (err) {
-                console.log(err);
+        window.location.href = "/chat"
+        var socket = io({
+            query: {
+                userId: $("#user-id-hidden").val()
             }
-        })
+        });
     })
 
 })
 
-var socket = io("http://localhost:3000", {
-    query: {
-        userId: $("#user-id-hidden").val()
-    }
-});
+// var socket = io({
+//     query: {
+//         userId: $("#user-id-hidden").val()
+//     }
+// });
 
 socket.on("hello", (arg) => {
     console.log(arg);
@@ -535,3 +527,6 @@ socket.on("postdislike", (arg) => {
     }
     // toastr.success(arg)
 })
+
+
+

@@ -67,7 +67,7 @@ $(document).ready(function () {
                 },
                 error: function (err) {
                     alert(err.responseJSON.message)
-                    window.location.href = "http://localhost:3000/registration"
+                    window.location.href = "/registration"
                 }
             })
         }
@@ -121,7 +121,7 @@ $(document).ready(function () {
                 success: function (response) {
                     // $("#email").val("")
                     alert(response.message)
-                    window.location.href = "http://localhost:3000/login"
+                    window.location.href = "/login"
                     // $("#main-login").html(response)
                 },
                 error: function (err) {

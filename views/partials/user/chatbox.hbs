@@ -1,0 +1,42 @@
+<div>
+    <div class="bg-secondary d-flex">
+        <div>
+            <img src="{{chatUser.image}}" style="height: 57px;width:71px;"
+                class="rounded-circle object-cover card-img-start">
+        </div>
+        <div style="margin-left: 10px;margin-top:16px;">
+            {{chatUser.firstname}} {{chatUser.lastname}}
+        </div>
+    </div>
+    {{#if messages}}
+    <div class="bg-info" style="height: 500px;overflow: scroll;" id="chat-messages">
+        {{#each messages}}
+        {{!-- {{log ../logInUser "loginuserrrrr"}} --}}
+        {{!-- {{log sendBy "sebdbybyby"}} --}}
+        {{#compare ../logInUser "==" sendBy}}
+        <div class="card" style="width:300px;height:40px;margin-left:753px;">{{message}}</div>
+        {{else}}
+        <div class="card" style="width:300px;height:40px;">{{message}}</div>
+        {{/compare}}
+        {{/each}}
+    </div>
+    {{else}}
+    <div class="bg-info" style="height: 500px;">
+        {{!-- <div class="card" style="width:300px;height:40px;">hello</div>
+        <div class="card" style="width:300px;height:40px;margin-left:753px;">hello</div> --}}
+    </div>
+    {{/if}}
+    <div>
+        <div class="col-3">
+            <input type="text" name="message" id="message-info" style="position:absolute;bottom:0;width:940px;">
+            <button class="send btn btn-primary" style="position:absolute;bottom:0;width:100px;margin-left:947px;"
+                id="{{chatUser._id}}">send</button>
+        </div>
+
+    </div>
+</div>
+
+
+
+<script src="javascripts/pagewise/chat.js"></script>
+
