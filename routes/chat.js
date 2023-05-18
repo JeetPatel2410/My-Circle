@@ -27,14 +27,18 @@ router.post("/details", async function (req, res) {
 
 // Create Chat Collecation
 router.post("/message", async function (req, res) {
+    console.log(req.body, "req.bodyyyyyyyyyyyyyyyyyyy");
     await chat.create({
         sendBy: req.user._id,
-        receiveBy: req.query.receiveBy,
-        message: req.query.message
-    })
+        receiveBy: req.body.receiveBy,
+        message: req.body.message
+    });
 
-    io.to(req.query.receiveBy).emit("chat", `${req.query.message}`)
-    console.log(io.to(req.query.receiveBy).emit("chat", `${req.query.message}`), "checking");
+    // io.to(req.body.receiveBy).emit("chat", `${req.body.message}`)
+    io.to(req.body.receiveBy).emit("chat", {
+        sendBy: req.user._id,
+        message: req.body.message
+    })
     res.status(201).json({
         status: 201,
         message: "message created Succesfully"

@@ -8,35 +8,28 @@
             {{chatUser.firstname}} {{chatUser.lastname}}
         </div>
     </div>
-    {{#if messages}}
-    <div class="bg-info" style="height: 500px;overflow: scroll;" id="chat-messages">
+    <div class="bg-dark" style="height: 500px;overflow: scroll;" id="chat-messages">
         {{#each messages}}
-        {{!-- {{log ../logInUser "loginuserrrrr"}} --}}
-        {{!-- {{log sendBy "sebdbybyby"}} --}}
         {{#compare ../logInUser "==" sendBy}}
-        <div class="card" style="width:300px;height:40px;margin-left:753px;">{{message}}</div>
+        <div class="bg-primary mt-2 p-3 rounded mb-2" style="max-width:500px;clear:both;float:right">{{message}}</div>
+        {{!-- <div class="card bg-primary" style="width:300px;height:40px;margin-left:753px;">{{message}}</div> --}}
         {{else}}
-        <div class="card" style="width:300px;height:40px;">{{message}}</div>
+        <div class="bg-green mt-2 p-3 rounded" style="max-width:500px;clear:both;float:left">{{message}}</div>
+        {{!-- <div class="card bg-success" style="width:300px;height:40px;">{{message}}</div> --}}
         {{/compare}}
         {{/each}}
     </div>
-    {{else}}
-    <div class="bg-info" style="height: 500px;">
-        {{!-- <div class="card" style="width:300px;height:40px;">hello</div>
-        <div class="card" style="width:300px;height:40px;margin-left:753px;">hello</div> --}}
-    </div>
-    {{/if}}
-    <div>
-        <div class="col-3">
-            <input type="text" name="message" id="message-info" style="position:absolute;bottom:0;width:940px;">
-            <button class="send btn btn-primary" style="position:absolute;bottom:0;width:100px;margin-left:947px;"
-                id="{{chatUser._id}}">send</button>
+    <div class="row">
+        <div class="form-group col-11">
+            <input type="text" name="message" id="message-info" class="form-control">
+        </div>
+        <div class="col-auto text-center">
+            <button class="send btn btn-primary" id="{{chatUser._id}}">send</button>
         </div>
 
     </div>
 </div>
 
+{{!-- style="position:absolute;bottom:0;width:940px;" --}}
 
-
-<script src="javascripts/pagewise/chat.js"></script>
-
+{{!-- style="position:absolute;bottom:0;width:100px;margin-left:947px;" --}}

@@ -1,14 +1,15 @@
 <div class="container d-flex">
-    <div class="card" style="width:300px;">
+    <div class="card bg-light" style="width:300px;overflow: scroll;">
         {{#each userDetails}}
         <div class="row row-0">
             <div class="col-3">
                 <!-- Photo -->
-                <img src="{{image}}" style="height: 100px;width:736px;" class="object-cover card-img-start">
+                <img src="{{image}}" style="height: 100px;width:1429;" class="object-cover card-img-start">
             </div>
             <div class="spec-user col-9" id={{_id}}>
                 <div class="card-body">
                     <h3 class="card-title">{{firstname}} {{lastname}}</h3>
+                    <span id="count-{{_id}}"></span>
                 </div>
             </div>
         </div><br>
@@ -18,5 +19,3 @@
     </div>
 </div>
 {{!-- <input type="hidden" id="user-id-hidden" name="hiddenval" value="{{logInUser._id}}"> --}}
-
-<script src="javascripts/pagewise/chat.js"></script>

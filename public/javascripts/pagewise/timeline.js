@@ -485,6 +485,7 @@ $(document).ready(function () {
 
     $("#chat").click(function () {
         window.location.href = "/chat"
+        
         var socket = io({
             query: {
                 userId: $("#user-id-hidden").val()
@@ -500,15 +501,6 @@ $(document).ready(function () {
 //     }
 // });
 
-socket.on("hello", (arg) => {
-    console.log(arg);
-})
-
-
-// io.on("connection", function (socket) {
-//     conso    le.log("jffvifkvnlomfvfvofv");
-//     socket.to("someroom").emit("some event");
-// });
 
 socket.on("postlike", (arg) => {
     // alert(arg);
